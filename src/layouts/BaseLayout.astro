@@ -49,7 +49,7 @@ const ogImageUrl = absoluteUrl(ogImage);
     <meta name="twitter:description" content={description} />
     {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.webp" />
     <link
       rel="preload"
       href="/fonts/scope-one.woff2"
@@ -91,5 +91,15 @@ const ogImageUrl = absoluteUrl(ogImage);
       </main>
       <Footer flush={flushFooter} />
     </div>
+    <script>
+      import Lenis from "lenis";
+      import "lenis/dist/lenis.css";
+
+      const lenis = new Lenis({
+        lerp: 0.12,
+        anchors: true,
+        autoRaf: true,
+      });
+    </script>
   </body>
 </html>

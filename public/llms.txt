@@ -1,0 +1,29 @@
+# Jv.
+
+Techs, math, physics, and life.
+
+> Embrace what the age brings. Some are to be pursued, others let go.
+> Do not seek all answers amid exploration. Savor the journey,
+> which is what life ought to be.
+
+Essays are longform and published when ready, not on a schedule.
+The archive lists everything; the RSS feed carries full text.
+
+## Key pages
+
+- [Home](https://sve.moe/): Latest issue and featured essays
+- [About](https://sve.moe/about): Who am I.(I'm Jysve, abbr."Jv". "Jv." is also site's name)
+- [Archive](https://sve.moe/blog): All essays, searchable, filterable by category and tag
+- [RSS feed](https://sve.moe/rss.xml): Full-text feed of every published piece
+
+## Contributors
+
+- [Authors](https://sve.moe/about/): Owner and who did press their essays on the site.
+
+## Info
+
+Usernames are all 'Jysve', and nickname will be 'Jv.' when available.
+- GitHub: @Jysve(https://github.com/Jysve)
+- Discord: @Jysve(No URI)
+- Zhihu: @Jysve(https://www.zhihu.com/people/Jysve)
+- Bilibili: @Jysve(https://space.bilibili.com/246563710)

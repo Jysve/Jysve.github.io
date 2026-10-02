@@ -49,7 +49,7 @@ export const authors = [
     slug: "Jysve",
     name: "Jv.",
     bio: "Explore. Dream. Discover.",
-    longBio: "longBio, waiting for being editing. maybe someday.",
+    longBio: "The purpose of computing is insight, not numbers.",
     avatar: "/avatars/jysve.webp",
   },
 ];
@@ -59,7 +59,7 @@ export const categories = [
   { slug: "announcements", name: "Announcements" },
   { slug: "thoughts", name: "Thoughts" },
   { slug: "comments", name: "Comments" },
-  { slug: "records", name: "Records" },
+  { slug: "moments", name: "Moments" },
 ];
 
 export const tags = [

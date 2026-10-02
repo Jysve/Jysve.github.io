@@ -2,6 +2,15 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import { SITE, authors } from "../lib/blog-data.js";
+
+const star = { src: "/avatars/jysve.webp", size: 88 };
+const planets = [
+  { name: "GitHub", link: "https://github.com/Jysve", src: "/entities/github.webp", size: 35, orbit: 0.40, speed: 0.00015, phase: 2.9 },
+  { name: "Zhihu", link: "https://www.zhihu.com/people/Jysve", src: "/entities/zhihu.webp", size: 35, orbit: 0.55, speed: 0.0001, phase: 0.8 },
+  { name: "Apache", link: "https://apache.org", src: "/entities/apache.webp", size: 40, orbit: 0.80, speed: 0.00008, phase: 5.0 },
+  { name: "Bilibili", link: "https://space.bilibili.com/246563710", src: "/entities/bilibili.webp", size: 40, orbit: 1.0, speed: 0.00006, phase: 6.2 },
+  { name: "GDG", link: "https://developers.google.com/", src: "/entities/google.webp", size: 45, orbit: 1.5, speed: 0.00008, phase: 4.0 },
+];
 ---
 
 <BaseLayout
@@ -15,27 +24,47 @@ import { SITE, authors } from "../lib/blog-data.js";
     <header class="mt-6">
       <div class="text-xs font-medium uppercase tracking-[0.2em] text-primary">About</div>
       <h1 class="mt-2 font-serif text-5xl font-semibold leading-[1.05]">
-        A quiet magazine for the open web.
+        Jysve here.
       </h1>
     </header>
 
-    <div class="prose-article mt-10">
-      <p>
-        {SITE.name} began as a folder of notes, drafts, and half-finished essays &mdash; the kind of writing that doesn't survive the timeline. We started publishing it here because we wanted somewhere slower to read, and somewhere slower to write.
-      </p>
-      <p>
-        The magazine is independent, occasional, and unsponsored. We publish when the work is ready and not before. There are no trackers, no pop-ups, and no infinite scroll. Just sentences, photographs, and the occasional conversation.
-      </p>
-      <h2 id="what-we-publish">What we publish</h2>
-      <p>
-        Essays on writing, design, and the craft of the web. Field notes from places we love. Interviews with people who make things with their hands. The occasional photograph, when one is worth printing.
-      </p>
-      <h2 id="who-we-are">Who we are</h2>
-      <p>A small editorial team, scattered across three time zones, who would rather be reading.</p>
-    </div>
+    <section class="mt-12 border-t border-border pt-10" data-orbits>
+      <div class="orbit-stage relative h-[420px]" data-stage>
+        {/* Orbit lines: one SVG layer, JS sizes the ellipses */}
+        <svg class="orbit-svg" aria-hidden="true">
+          {
+            planets.map((p) => (
+              <ellipse class="orbit-ring" data-ring data-orbit={p.orbit} />
+            ))
+          }
+        </svg>
+
+        <div class="orbit-star" style={`--d:${star.size}px`}>
+          <img src={star.src} alt="" width={star.size} height={star.size} loading="lazy" draggable="false" />
+        </div>
+
+        {
+          planets.map((p) => (
+            <a
+              href={p.link}
+              aria-label={p.name}
+              class="orbit-planet"
+              data-planet
+              data-orbit={p.orbit}
+              data-speed={p.speed}
+              data-phase={p.phase}
+              style={`--d:${p.size}px`}
+            >
+              <img src={p.src} alt="" width={p.size} height={p.size} loading="lazy" draggable="false" />
+              <span class="orbit-tip" aria-hidden="true">{p.name}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
 
     <section class="mt-12 border-t border-border pt-10">
-      <h2 class="font-serif text-2xl font-semibold">Contributors</h2>
+      <h2 class="font-serif text-2xl font-semibold">Founder & Maintainer</h2>
       <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
           authors.map((author) => (
@@ -52,3 +81,280 @@ import { SITE, authors } from "../lib/blog-data.js";
     </section>
   </div>
 </BaseLayout>
+
+<style>
+  .orbit-stage {
+    --tilt: -8deg;   /* base plane: 8deg counter-clockwise from horizontal (req 9) */
+    rotate: var(--tilt);
+    user-select: none;
+  }
+  .orbit-stage.is-spin-enabled { cursor: grab; }
+  .orbit-stage.is-dragging { cursor: grabbing; }
+
+  /* Orbit line layer. The foreground token IS the inverted background in
+     this theme system, so strokes follow every theme flip automatically
+     without a rasterizing invert() filter (req 8). */
+  .orbit-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  [data-orbits].is-ready .orbit-svg { opacity: 1; }
+
+  .orbit-ring {
+    fill: none;
+    stroke: var(--color-foreground);
+    stroke-width: 0.5;                          /* tweak between 0.5 and 1 to taste */
+    vector-effect: non-scaling-stroke;           /* hairline stays hairline at any zoom */
+    stroke-opacity: 0.3;
+    pointer-events: stroke;
+    cursor: pointer;
+    transition: stroke-opacity 0.25s ease;
+  }
+
+  .orbit-ring:hover,
+  .orbit-ring.is-hot { stroke-opacity: 0.65; }
+
+  .orbit-star,
+  .orbit-planet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--d);
+    height: var(--d);
+    will-change: transform;
+  }
+  .orbit-star {
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    z-index: 2;
+  }
+  .orbit-star img,
+  .orbit-planet img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: block;
+    user-select: none;
+    rotate: calc(-1 * var(--tilt));  /* keep images upright inside the tilted plane (req 6) */
+  }
+  .orbit-star img {
+    box-shadow: 0 0 48px 6px oklch(0.72 0.14 60 / 0.28);
+  }
+
+  .orbit-planet {
+    border-radius: 50%;
+    opacity: 0;
+  }
+  [data-orbits].is-ready .orbit-planet { opacity: 1; transition: opacity 0.4s ease; }
+
+  .orbit-planet:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  /* Name tooltip; counter-rotated so the text stays horizontal */
+  .orbit-tip {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) rotate(calc(-1 * var(--tilt)));
+    padding: 0.3rem 0.65rem;
+    font-size: 0.75rem;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--color-foreground);
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    box-shadow: 0 2px 12px oklch(0 0 0 / 0.15);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .orbit-planet:focus-visible .orbit-tip { opacity: 1; }
+
+  @media (hover: hover) {
+    /* Dimming is plain opacity, so it blends with any theme (req 1) */
+    .orbit-planet img {
+      opacity: 0.45;
+      transition: opacity 0.25s ease;
+    }
+    .orbit-planet:hover img,
+    .orbit-planet:focus-visible img {
+      opacity: 1;   /* hover removes the veil */
+    }
+    .orbit-planet:hover .orbit-tip { opacity: 1; }
+  }
+</style>
+
+<script>
+  const section = document.querySelector("[data-orbits]");
+  const stage = section?.querySelector("[data-stage]");
+
+  if (section && stage) {
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const BASE_TILT = (-8 * Math.PI) / 180; // matches --tilt, in radians
+
+    const planets = [...section.querySelectorAll("[data-planet]")].map((el) => ({
+      el,
+      link: el.getAttribute("href"),
+      orbit: parseFloat(el.dataset.orbit),
+      speed: parseFloat(el.dataset.speed),
+      phase: parseFloat(el.dataset.phase),
+    }));
+    const rings = [...section.querySelectorAll("[data-ring]")];
+    planets.forEach((p, i) => (p.ring = rings[i]));
+
+    let cx = 0, cy = 0, rx = 0, ry = 0;
+    const measure = () => {
+      cx = stage.clientWidth / 2;
+      cy = stage.clientHeight / 2;
+      rx = cx - 72;
+      ry = Math.min(cy - 72, rx * 0.5);
+      rings.forEach((ring) => {
+        const o = parseFloat(ring.dataset.orbit);
+        ring.setAttribute("cx", cx);
+        ring.setAttribute("cy", cy);
+        ring.setAttribute("rx", rx * o);
+        ring.setAttribute("ry", ry * o);
+      });
+    };
+
+    // Shared spin angle added to every orbit; driven by drag and inertia (req 2)
+    let spin = 0;
+    let spinVel = 0; // rad per ms
+    let dragging = false;
+    let suppressClick = false;
+
+    const place = (p, t) => {
+      const a = p.phase + t * p.speed + spin;
+      const depth = Math.sin(a);
+      const x = cx + Math.cos(a) * rx * p.orbit;
+      const y = cy + Math.sin(a) * ry * p.orbit;
+      p.el.style.transform =
+        `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${1 + depth * 0.18})`;
+      p.el.style.zIndex = depth > 0 ? 3 : 1;
+    };
+
+    // Hovering a planet lights up its whole orbit (req 5);
+    // clicking anywhere on the ring navigates like its planet (req 4)
+    planets.forEach((p) => {
+      p.el.addEventListener("mouseenter", () => p.ring.classList.add("is-hot"));
+      p.el.addEventListener("mouseleave", () => p.ring.classList.remove("is-hot"));
+      p.ring.addEventListener("click", () => {
+        if (p.link) window.location.assign(p.link);
+      });
+    });
+
+    // Pointer position as an angle in the tilted ellipse frame (req 2)
+    const pointerAngle = (e) => {
+      const rect = stage.getBoundingClientRect();
+      const dx = e.clientX - (rect.left + rect.width / 2);
+      const dy = e.clientY - (rect.top + rect.height / 2);
+      const lx = dx * Math.cos(-BASE_TILT) - dy * Math.sin(-BASE_TILT);
+      const ly = dx * Math.sin(-BASE_TILT) + dy * Math.cos(-BASE_TILT);
+      return Math.atan2(ly / ry, lx / rx);
+    };
+
+    // Mouse drag spins the system along the orbital direction (req 2).
+    // Mouse only, so touch devices keep native page scrolling.
+    const norm = (d) => (((d + Math.PI) % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+    let prevAng = 0, prevT = 0, startX = 0, startY = 0, moved = false;
+
+    stage.addEventListener("pointerdown", (e) => {
+      if (reduced || e.pointerType !== "mouse" || e.button !== 0) return;
+      dragging = true;
+      moved = false;
+      spinVel = 0;
+      prevAng = pointerAngle(e);
+      prevT = performance.now();
+      startX = e.clientX;
+      startY = e.clientY;
+      stage.classList.add("is-dragging");
+      // NOTE: no setPointerCapture here — capturing on pointerdown would
+      // redirect the click target to the stage and break ring/planet links.
+    });
+    stage.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const now = performance.now();
+      const ang = pointerAngle(e);
+      const dA = norm(ang - prevAng);
+      spin += dA;
+      spinVel = spinVel * 0.5 + (dA / Math.max(1, now - prevT)) * 0.5;
+      // Capture only once a real drag starts, so plain clicks still land
+      // on the ring or the planet anchor
+      if (!moved && Math.hypot(e.clientX - startX, e.clientY - startY) > 5) {
+        moved = true;
+        stage.setPointerCapture(e.pointerId);
+      }
+      prevAng = ang;
+      prevT = now;
+    });
+
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      stage.classList.remove("is-dragging");
+      if (moved) suppressClick = true; // swallow the click that ends a drag
+      spinVel = Math.max(-0.01, Math.min(0.01, spinVel)); // release inertia cap
+    };
+    stage.addEventListener("pointerup", endDrag);
+    stage.addEventListener("pointercancel", endDrag);
+    stage.addEventListener("click", (e) => {
+      if (suppressClick) {
+        e.preventDefault();
+        e.stopPropagation();
+        suppressClick = false;
+      }
+    }, true);
+
+    let rafId = null, inView = true, lastT = 0;
+
+    const tick = (t) => {
+      rafId = null;
+      if (!inView || document.hidden) return;
+      const dt = Math.min(48, t - lastT || 16);
+      lastT = t;
+      if (!dragging && Math.abs(spinVel) > 1e-5) {
+        spin += spinVel * dt;              // damped inertia after release
+        spinVel *= Math.exp(-dt / 500);
+      }
+      planets.forEach((p) => place(p, t));
+      rafId = requestAnimationFrame(tick);
+    };
+    const kick = () => {
+      if (rafId === null && inView && !document.hidden) rafId = requestAnimationFrame(tick);
+    };
+
+    measure();
+
+    if (reduced) {
+      // Static diagram; drag is disabled, hover and links still work
+      planets.forEach((p) => place(p, 0));
+      section.classList.add("is-ready");
+    } else {
+      stage.classList.add("is-spin-enabled");
+      lastT = performance.now();
+      planets.forEach((p) => place(p, lastT));
+      section.classList.add("is-ready");
+      kick();
+
+      new IntersectionObserver(([e]) => { inView = e.isIntersecting; kick(); }).observe(stage);
+      document.addEventListener("visibilitychange", kick);
+    }
+
+    addEventListener("resize", () => {
+      measure();
+      planets.forEach((p) => place(p, reduced ? 0 : performance.now()));
+      kick();
+    });
+  }
+</script>
