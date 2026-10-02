@@ -4,7 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PostCard from "../components/PostCard.astro";
 import Newsletter from "../components/Newsletter.astro";
 import Icon from "../components/Icon.astro";
-import autumnScene from "../assets/autumn-scene.webp";
+import homeBanner from "../assets/boya.webp";
 import {
   SITE,
   categories,
@@ -29,17 +29,17 @@ const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slu
 >
   <section class="relative -mt-[calc(4rem+2px)] min-h-[calc(100svh-2rem)] overflow-hidden border-b border-border/60 pt-[calc(4rem+2px)] sm:min-h-[760px]">
     <Image
-      src={autumnScene}
+      src={homeBanner}
       alt=""
       class="absolute inset-0 h-full w-full object-cover object-center"
       loading="eager"
       fetchpriority="high"
       decoding="async"
-      width={1600}
-      widths={[640, 960, 1280, 1600]}
+      width={2400}
+      widths={[600, 1200, 1800, 2400]}
       sizes="100vw"
       format="webp"
-      quality={50}
+      quality={65}
     />
     <div
       aria-hidden="true"
@@ -56,24 +56,21 @@ const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slu
     <div class="relative mx-auto flex min-h-[calc(100svh-6rem)] max-w-6xl items-center px-5 py-20 sm:min-h-[680px] sm:py-24">
       <div class="max-w-4xl text-white drop-shadow-[0_1px_18px_rgba(0,0,0,0.28)]">
         <h1 class="font-serif text-[2.5rem] font-medium leading-[1.02] sm:text-6xl lg:text-7xl">
-        An independent magazine on
-          <span class="italic text-white"> writing</span>,
-          <span class="italic text-white"> design</span>, and the
-          <span class="italic text-white"> slow web</span>.
+          Where Will Our Reunion Lie? That's The Question.
         </h1>
         <p class="mt-8 max-w-xl text-lg leading-relaxed text-white/86">
-          Essays, field notes, and conversations &mdash; published occasionally, edited carefully, and meant to be read in a single sitting.
+          The unexamined life is not worth living. We have strived too long, waited too long. The time has come. Face it, seize it. Go.
         </p>
         <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
           <a
             href={`/blog/${featured.slug}`}
-            class="group inline-flex items-center gap-2 border-b border-white pb-1 text-sm font-medium text-white hover:border-white/70 hover:text-white/82"
+            class="group italic inline-flex items-center gap-2 border-b border-white pb-1 text-sm font-medium text-white hover:border-white/70 hover:text-white/82"
           >
-            Begin with this issue's lead essay
+            View the latest update now
             <Icon name="arrow-right" class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </a>
-          <a href="/blog" class="text-sm text-white/76 hover:text-white">
-            Or browse the archive
+          <a href="/blog" class="italic text-sm text-white/76 hover:text-white">
+            Browse the archive
           </a>
         </div>
       </div>

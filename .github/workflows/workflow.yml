@@ -17,6 +17,11 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v6
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -24,10 +29,10 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Build Astro site
-        run: npm run build
+        run: pnpm build
 
       - name: Upload dist artifact
         uses: actions/upload-pages-artifact@v4
