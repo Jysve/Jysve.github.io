@@ -58,8 +58,7 @@ export const categories = [
   { slug: "essays", name: "Essays" },
   { slug: "announcements", name: "Announcements" },
   { slug: "thoughts", name: "Thoughts" },
-  { slug: "comments", name: "Comments" },
-  { slug: "moments", name: "Moments" },
+  { slug: "reports", name: "Reports" },
 ];
 
 export const tags = [
