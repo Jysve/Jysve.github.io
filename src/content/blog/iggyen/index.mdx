@@ -136,7 +136,7 @@ You may notice that there are also ***PPMC***, which is member of
 , belongs to [***Apache Incubator***](https://incubator.apache.org/).
 :::
 
-:::important[GitHub is Not Necessary]
+:::tip[GitHub is Not Necessary]
 Apache projects are NOT necessarily hosted on GitHub. 
 Many long established Apache projects still use 
 [***Apache SVN***](https://subversion.apache.org/) 
@@ -440,7 +440,7 @@ git reset --hard ff6695ba589656acef68da534b4af55dda452c80 && cargo build --packa
 CPU_ALLOCATION="<more than your PHYSICAL cores>" RUST_BACKTRACE=1 cargo run --bin server
 ```
 
-:::important[Couldn't Load Data From Disk?]
+:::tip[Couldn't Load Data From Disk?]
 That's because the process attempted to read an incompatible system metadata file under
 the `./local_data/` directory. Just remove the `./local_data/` directory and try again.
 :::
@@ -1089,7 +1089,7 @@ Fortunately. Well, although it's true[^sponsors] that ***Microsoft*** a sponsor 
 
 My local computing power is just sitting idle anyway, so I may as well put it to use.
 
-:::important[Local CI/CD]
+:::tip[Local CI/CD]
 Since a powerful computer cluster can be shared, running `CI/CD` on the cloud is 
 generally the recommended choice. As for doing this locally, it seems rather
 _controversial_, as it competes for computing power with subsequent development work.
@@ -1263,9 +1263,9 @@ and lighter configuration overhead for containerized environments.[^llama_two]
 
 [^llama_two]: Meta Inc., [_What is quickwit-sink?_](https://www.llama.com/) Llama 4 Scout, Feb. 14, 2025. [Accessed: Feb. 14, 2025].
 
-:::important[You May Have to Edit the Configs Under `.github/` to Disable Some Tests]
+:::tip[You May Have to Edit the Configs Under `.github/` to Disable Some Tests]
 :::
-:::important[For Features Like _**CodeCoverage**_, You May Need a Token for Authentication]
+:::tip[For Features Like _**CodeCoverage**_, You May Need a Token for Authentication]
 When `act` runs third-party Actions from the GitHub Marketplace (e.g., _**codecov-action**_).
 `codecov-action` requires a `CODECOV_TOKEN` (generated from the Codecov platform) to upload coverage reports.
 A GitHub Personal Access Token (PAT) is optionally needed for GitHub API

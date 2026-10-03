@@ -6,6 +6,7 @@ import rehypeKatex from "rehype-katex";
 import remarkDirective from "remark-directive";
 import { remarkAdmonition } from "remark-admonition";
 import { remarkHyperlinkCard, rehypeHyperlinkCard } from "./src/plugins/hyperlink-card.mjs";
+import { remarkSpoiler } from "./src/plugins/remark-spoiler.mjs";
 
 const site =
   process.env.SITE_URL || process.env.PUBLIC_SITE_URL || "https://sve.moe";
@@ -18,6 +19,7 @@ export default defineConfig({
       remarkDirective,
       remarkHyperlinkCard,
       remarkMath,
+      remarkSpoiler,
       [
         remarkAdmonition,
         {

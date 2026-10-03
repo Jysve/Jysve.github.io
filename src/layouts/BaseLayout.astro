@@ -6,7 +6,7 @@ import Footer from "../components/Footer.astro";
 import { SITE, imageSrc } from "../lib/blog-data.js";
 
 const {
-  title = `${SITE.name} - A quiet magazine on writing, design, and the slow web`,
+  title = `${SITE.name}`,
   description = SITE.description,
   canonical,
   ogType = "website",
@@ -100,6 +100,39 @@ const ogImageUrl = absoluteUrl(ogImage);
         anchors: true,
         autoRaf: true,
       });
+      const cursor = document.getElementById("custom-cursor");
+      if (cursor && matchMedia("(pointer: fine)").matches) {
+        let raf = 0, x = -100, y = -100;
+
+        addEventListener("mousemove", (e) => {
+          x = e.clientX;
+          y = e.clientY;
+          cursor.classList.add("is-visible");
+          if (!raf) {
+            raf = requestAnimationFrame(() => {
+              cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+              raf = 0;
+            });
+          }
+          const interactive = e.target.closest?.(
+            "a, button, [role='button'], select, label, summary, input, textarea"
+          );
+          cursor.classList.toggle("is-pointer", !!interactive);
+        }, { passive: true });
+
+        document.documentElement.addEventListener("mouseleave", () =>
+          cursor.classList.remove("is-visible")
+        );
+      }
     </script>
+    <div id="custom-cursor" aria-hidden="true">
+      <svg class="cursor-icon cursor-icon--default" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path fill="none" stroke="currentColor" stroke-width="2" d="M 4 4 l 8 24 l 19 -2 Z"/>
+      </svg>
+      <svg class="cursor-icon cursor-icon--pointer" width="24" height="24" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path fill="currentColor" stroke="currentColor" stroke-width="2" d="M 4 4 l 8 24 l 19 -2 Z"/>
+      </svg>
+    </div>
   </body>
 </html>

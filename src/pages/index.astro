@@ -19,10 +19,11 @@ const featured = await featuredPost();
 const featuredAuthor = getAuthor(featured.author);
 const featuredCategory = getCategory(featured.category);
 const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slug);
+const countdownTarget = "2027-06-07T09:00:00+08:00";
 ---
 
 <BaseLayout
-  title={`${SITE.name} - Writing, design & the slow web`}
+  title={`${SITE.name}`}
   description={SITE.description}
   canonical="/"
   flushFooter
@@ -72,6 +73,13 @@ const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slu
           <a href="/blog" class="italic text-sm text-white/76 hover:text-white">
             Browse the archive
           </a>
+          <div
+            class="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-sm font-semibold leading-none tabular-nums text-white backdrop-blur-sm"
+            data-countdown
+            data-target={countdownTarget}
+          >
+            <span data-countdown-display>--:--:--:--</span>
+          </div>
         </div>
       </div>
     </div>
@@ -221,4 +229,29 @@ const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slu
       button.addEventListener("click", () => filterCards(button.dataset.homeFilter || ""));
     });
   }
+  document.querySelectorAll("[data-countdown]").forEach((el) => {
+    const display = el.querySelector("[data-countdown-display]");
+    const target = new Date(el.dataset.target).getTime();
+    if (!display || Number.isNaN(target)) return;
+
+    const pad = (n) => String(n).padStart(2, "0");
+    let timer;
+
+    const render = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        display.textContent = "00:00:00:00";
+        if (timer) clearInterval(timer);
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor(diff / 3600000) % 24;
+      const m = Math.floor(diff / 60000) % 60;
+      const s = Math.floor(diff / 1000) % 60;
+      display.textContent = `${d}:${pad(h)}:${pad(m)}:${pad(s)}`;
+    };
+
+    render();
+    timer = setInterval(render, 1000);
+  });
 </script>
