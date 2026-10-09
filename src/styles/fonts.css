@@ -1,0 +1,42 @@
+/* Ubuntu Sans Mono - 可变字体，用 font-weight 范围 */
+@font-face {
+  font-family: 'Ubuntu Sans Mono';
+  src: url('/fonts/ubuntu_mono/UbuntuSansMono-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ubuntu Sans Mono';
+  src: url('/fonts/ubuntu_mono/UbuntuSansMono-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nami Pro';
+  src: url('/fonts/NamiPro-Regular.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nami Pro';
+  src: url('/fonts/NamiPro-Regular.otf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 全局默认用 Nami Pro */
+body {
+  font-family: 'Nami Pro', sans-serif;
+}
+
+/* 代码块 / 等宽区域用 Ubuntu Sans Mono */
+pre, code, .mono {
+  font-family: 'Ubuntu Sans Mono', monospace;
+}
