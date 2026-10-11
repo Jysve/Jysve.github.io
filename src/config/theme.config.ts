@@ -1,14 +1,14 @@
 // Copyright Jv.(@Jysve) 2026.
 
-const siteUrl = ("https://sve.moe");
+const siteUrl = "https://sve.moe";
 export const SITE = {
   name: "Jv.",
-  description:
-    "Embrace what the age brings. Some are to be pursued, others let go. Do not seek all answers amid exploration. Savor the journey, which is what life ought to be.",
+  description: `Technical, Academic, and Daily Life.`,
   url: siteUrl,
   locale: "en-US",
   language: "en",
-  repositoryUrl: "https://github.com/Jysve",
+  repositoryUrl: "https://github.com/Jysve/jysve.github.io",
+  ogImg: "/og.webp",
 };
 
 export const NAVIGATION = [
@@ -21,7 +21,7 @@ export const NAVIGATION = [
 export const CONTACT = {
   email: "Jv@sve.moe",
   socialHandle: "Jysve",
-  socialUrl: "zhihu.com/people/Jysve",
+  socialUrl: "https://www.zhihu.com/people/Jysve",
 };
 
 export const FORMS = {
@@ -39,7 +39,7 @@ export const FORMS = {
 
 export const SOCIAL_LINKS = [
   { href: "/rss.xml", label: "RSS feed", icon: "rss" },
-  { href: CONTACT.socialUrl, label: `${SITE.name} on X`, icon: "zhihu" },
+  { href: CONTACT.socialUrl, label: `${SITE.name} on Zhihu`, icon: "zhihu" },
   { href: SITE.repositoryUrl, label: `${SITE.name} on GitHub`, icon: "github" },
   { href: `mailto:${CONTACT.email}`, label: "Email", icon: "mail" },
 ];
@@ -57,9 +57,8 @@ export const authors = [
 export const categories = [
   { slug: "essays", name: "Essays" },
   { slug: "announcements", name: "Announcements" },
-  { slug: "thoughts", name: "Thoughts" },
-  { slug: "comments", name: "Comments" },
-  { slug: "moments", name: "Moments" },
+  { slug: "reprints", name: "Reprints" },
+  { slug: "reports", name: "Reports" },
 ];
 
 export const tags = [

@@ -1,21 +1,50 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import { SITE, authors } from "../lib/blog-data.js";
 
 const star = { src: "/avatars/jysve.webp", size: 88 };
 const planets = [
-  { name: "GitHub", link: "https://github.com/Jysve", src: "/entities/github.webp", size: 35, orbit: 0.40, speed: 0.00015, phase: 2.9 },
-  { name: "Zhihu", link: "https://www.zhihu.com/people/Jysve", src: "/entities/zhihu.webp", size: 35, orbit: 0.55, speed: 0.0001, phase: 0.8 },
-  { name: "Apache", link: "https://apache.org", src: "/entities/apache.webp", size: 40, orbit: 0.80, speed: 0.00008, phase: 5.0 },
-  { name: "Bilibili", link: "https://space.bilibili.com/246563710", src: "/entities/bilibili.webp", size: 40, orbit: 1.0, speed: 0.00006, phase: 6.2 },
-  { name: "GDG", link: "https://developers.google.com/", src: "/entities/google.webp", size: 45, orbit: 1.5, speed: 0.00008, phase: 4.0 },
+  { name: "GitHub", link: "https://github.com/Jysve", src: "/entities/github.webp", size: 35, orbit: 0.40, speed: -0.00010, phase: 2.9 },
+  { name: "Zhihu", link: "https://www.zhihu.com/people/Jysve", src: "/entities/zhihu.webp", size: 35, orbit: 0.55, speed: -0.00008, phase: 0.8 },
+  { name: "Apache", link: "https://apache.org", src: "/entities/apache.webp", size: 40, orbit: 0.80, speed: -0.00005, phase: 5.0 },
+  { name: "Bilibili", link: "https://space.bilibili.com/246563710", src: "/entities/bilibili.webp", size: 40, orbit: 1.0, speed: -0.00004, phase: 6.2 },
+  { name: "GDG", link: "https://developers.google.com/", src: "/entities/google.webp", size: 45, orbit: 1.5, speed: -0.00002, phase: 4.0 },
 ];
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "@id": `${SITE.url}/about#webpage`,
+  "url": `${SITE.url}/about`,
+  "inLanguage": SITE.locale,
+  "mainEntity": {
+    "@type": "Person",
+    "@id": `${SITE.url}/about#person`,
+    "name": "Jv.",
+    "alternateName": ["Jysve", "Svecco"],
+    "url": `${SITE.url}/about`,
+    "image": `${SITE.url}/avatars/jysve.webp`,
+    "jobTitle": "Developer",
+    "description": `${SITE.description}`,
+    "knowsAbout": [
+      "Rust", "Apache", "Linux", "Math",
+      "NSE", "SRE", "SELinux", "CNCF"
+    ],
+    "sameAs": [
+      "https://github.com/Jysve" ,
+      "https://www.zhihu.com/people/Jysve" ,
+      "https://space.bilibili.com/246563710",
+    ]
+  }
+};
 ---
 
 <BaseLayout
   title={`About - ${SITE.name}`}
-  description={`About ${SITE.name}: an independent magazine on writing, design, and the slow web.`}
+  description={`About ${SITE.name} | Technical, Academic, and Daily Life.`}
+  jsonLd={jsonLd}
+  ogImage={SITE.ogImg}
   canonical="/about"
 >
   <div class="mx-auto max-w-3xl px-5 py-12">
@@ -40,7 +69,10 @@ const planets = [
         </svg>
 
         <div class="orbit-star" style={`--d:${star.size}px`}>
-          <img src={star.src} alt="" width={star.size} height={star.size} loading="lazy" draggable="false" />
+          <Image
+            src={star.src} alt="" width={star.size * 2} height={star.size * 2}
+            loading="eager" fetchpriority="high" decoding="async" draggable="false"
+          />
         </div>
 
         {
@@ -55,7 +87,10 @@ const planets = [
               data-phase={p.phase}
               style={`--d:${p.size}px`}
             >
-              <img src={p.src} alt="" width={p.size} height={p.size} loading="lazy" draggable="false" />
+              <Image
+                src={p.src} alt="" width={p.size * 2} height={p.size * 2}
+                loading="eager" decoding="async" draggable="false"
+              />
               <span class="orbit-tip" aria-hidden="true">{p.name}</span>
             </a>
           ))

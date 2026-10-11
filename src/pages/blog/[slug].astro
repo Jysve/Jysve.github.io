@@ -14,7 +14,6 @@ import {
   getTag,
   formatDate,
   relatedPosts,
-  adjacentPosts,
   normalizePost,
 } from "../../lib/blog-data.js";
 
@@ -36,7 +35,6 @@ const toc = headings
     text: heading.text,
   }));
 const related = await relatedPosts(post);
-const { prev, next } = await adjacentPosts(post);
 const canonical = post.canonical ?? `/blog/${post.slug}`;
 const canonicalUrl = new URL(canonical, SITE.url).toString();
 const socialImage = post.thumbnail
@@ -58,7 +56,14 @@ const jsonLd = {
   datePublished: post.date,
   dateModified: post.updated || post.date,
   image: thumbnailUrl,
-  author: { "@type": "Person", name: author?.name },
+  author: author
+    ? {
+      "@type": "Person",
+      "@id": `${SITE.url}/about#person`,
+      "name": author.name,
+      "url": `${SITE.url}/authors/${author.slug}`,
+    }
+    : undefined,
   mainEntityOfPage: canonicalUrl,
 };
 ---
@@ -73,7 +78,7 @@ const jsonLd = {
   flushFooter
 >
   <div class="fixed left-0 right-0 top-0 z-50 h-0.5 bg-transparent">
-    <div data-reading-progress class="h-full bg-primary transition-[width] duration-75" style="width: 0%"></div>
+    <div data-reading-progress class="h-full bg-primary transition-[width] duration-75" style="width: 0"></div>
   </div>
 
   <article class="mx-auto max-w-6xl px-5 py-10">
@@ -240,8 +245,6 @@ const jsonLd = {
   updateProgress();
   window.addEventListener("scroll", updateProgress, { passive: true });
 
-  const copyIcon = '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>';
-  const checkIcon = '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>';
   const twitterShare = document.querySelector("[data-share-twitter]");
   const linkedinShare = document.querySelector("[data-share-linkedin]");
   const currentUrl = window.location.href;
@@ -292,40 +295,5 @@ const jsonLd = {
         }, 2000);
       }
     } catch (error) {}
-  });
-
-  document.querySelectorAll(".prose-article pre").forEach((pre) => {
-    if (pre.parentElement?.classList.contains("code-block")) return;
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "code-block";
-    pre.parentNode?.insertBefore(wrapper, pre);
-    wrapper.appendChild(pre);
-
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "code-copy-button";
-    button.dataset.tooltip = "Copy code";
-    button.setAttribute("aria-label", "Copy code");
-    button.innerHTML = copyIcon;
-    wrapper.appendChild(button);
-
-    let resetTimer;
-    button.addEventListener("click", async () => {
-      try {
-        await writeClipboard(pre.textContent ?? "");
-        window.clearTimeout(resetTimer);
-        button.classList.add("is-copied");
-        button.dataset.tooltip = "Copied";
-        button.setAttribute("aria-label", "Copied");
-        button.innerHTML = checkIcon;
-        resetTimer = window.setTimeout(() => {
-          button.classList.remove("is-copied");
-          button.dataset.tooltip = "Copy code";
-          button.setAttribute("aria-label", "Copy code");
-          button.innerHTML = copyIcon;
-        }, 1800);
-      } catch (error) {}
-    });
   });
 </script>
