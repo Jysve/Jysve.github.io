@@ -3,11 +3,10 @@ export { SITE, authors, categories, tags } from "../config/theme.config.ts";
 import { authors, categories, tags } from "../config/theme.config.ts";
 
 const isoDate = (date) => date?.toISOString().slice(0, 10);
-const wordsPerMinute = 220;
+const wordsPerMinute = 180;
 
 const estimateReadingTime = (text = "") => {
   const words = text
-    .replace(/```[\s\S]*?```/g, " ")
     .replace(/<[^>]+>/g, " ")
     .trim()
     .split(/\s+/)

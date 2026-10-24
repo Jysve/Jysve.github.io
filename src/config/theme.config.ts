@@ -1,17 +1,16 @@
-const siteUrl = (
-  import.meta.env.SITE_URL ||
-  import.meta.env.PUBLIC_SITE_URL ||
-  "https://quietpages-eta.vercel.app"
-).replace(/\/$/, "");
+// Copyright Sve(@Jysve) 2026.
 
+import { containsServerDirective } from "astro/dist/runtime/server/render/server-islands";
+
+const siteUrl = "https://sve.moe";
 export const SITE = {
-  name: "Quiet Pages",
-  description:
-    "An independent magazine on writing, design, and the slow web. Published occasionally, read closely.",
+  name: "Sve",
+  description: `Technical, Academic, and Daily Life.`,
   url: siteUrl,
   locale: "en-US",
   language: "en",
-  repositoryUrl: "https://github.com/andreialba/quietpages",
+  repositoryUrl: "https://github.com/Jysve/jysve.github.io",
+  ogImg: "/og.webp",
 };
 
 export const NAVIGATION = [
@@ -22,9 +21,11 @@ export const NAVIGATION = [
 ];
 
 export const CONTACT = {
-  email: "hello@example.com",
-  socialHandle: "@quietpages",
-  socialUrl: "https://x.com/quietpages",
+  email: "Jv@sve.moe",
+  socialHandle: "Jysve",
+  zhihu: "https://www.zhihu.com/people/Jysve",
+  github: "https://github.com/Jysve",
+  discord: "https://discord.com/users/910830643422838784",
 };
 
 export const FORMS = {
@@ -41,54 +42,38 @@ export const FORMS = {
 };
 
 export const SOCIAL_LINKS = [
-  { href: "/rss.xml", label: "RSS feed", icon: "rss" },
-  { href: CONTACT.socialUrl, label: `${SITE.name} on X`, icon: "twitter" },
-  { href: SITE.repositoryUrl, label: `${SITE.name} on GitHub`, icon: "github" },
   { href: `mailto:${CONTACT.email}`, label: "Email", icon: "mail" },
+  { href: CONTACT.zhihu, label: `Jysve on Zhihu`, icon: "zhihu" },
+  { href: CONTACT.github, label: `Jysve on GitHub`, icon: "github" },
+  { href: CONTACT.discord, label: `Jysve on Discord`, icon: "discord" },
 ];
 
 export const authors = [
   {
-    slug: "elena-march",
-    name: "Elena March",
-    bio: "Writer & editor covering design, craft, and slow technology.",
-    longBio:
-      "Elena March writes about the quiet edges of design and technology. Previously an editor at two small magazines, she now publishes essays and field notes from a desk overlooking the harbour.",
-    avatar: "/avatars/elena-march.svg",
-  },
-  {
-    slug: "samuel-okafor",
-    name: "Samuel Okafor",
-    bio: "Software engineer with a soft spot for typography and the open web.",
-    longBio:
-      "Samuel builds tools for writers and reads more than he ships. He believes the best interfaces are the ones you don't notice.",
-    avatar: "/avatars/samuel-okafor.svg",
-  },
-  {
-    slug: "mira-iwasaki",
-    name: "Mira Iwasaki",
-    bio: "Photographer and essayist based between Kyoto and Lisbon.",
-    longBio:
-      "Mira's work sits at the intersection of place, memory, and the everyday object. Her essays have appeared in a number of small but loved publications.",
-    avatar: "/avatars/mira-iwasaki.svg",
+    slug: "Jysve",
+    name: "Jysve",
+    bio: "Explore. Dream. Discover.",
+    longBio: "The purpose of computing is insight, not numbers.",
+    avatar: "/avatars/jysve.webp",
   },
 ];
 
 export const categories = [
   { slug: "essays", name: "Essays" },
-  { slug: "design", name: "Design" },
-  { slug: "engineering", name: "Engineering" },
-  { slug: "field-notes", name: "Field Notes" },
-  { slug: "interviews", name: "Interviews" },
+  { slug: "announcements", name: "Announcements" },
+  { slug: "reprints", name: "Reprints" },
+  { slug: "reports", name: "Reports" },
 ];
 
 export const tags = [
-  { slug: "writing", name: "Writing" },
-  { slug: "typography", name: "Typography" },
-  { slug: "minimalism", name: "Minimalism" },
-  { slug: "tools", name: "Tools" },
-  { slug: "travel", name: "Travel" },
-  { slug: "process", name: "Process" },
-  { slug: "web", name: "Web" },
-  { slug: "books", name: "Books" },
+  { slug: "experience", name: "Experience" },
+  { slug: "math", name: "Math" },
+  { slug: "physics", name: "Physics" },
+  { slug: "software", name: "Software" },
+  { slug: "hardware", name: "Hardware" },
+  { slug: "ai", name: "AI" },
+  { slug: "apache", name: "Apache" },
+  { slug: "cncf", name: "CNCF" },
+  { slug: "life", name: "Life" },
+  { slug: "others", name: "Others" },
 ];

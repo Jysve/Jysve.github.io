@@ -4,7 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PostCard from "../components/PostCard.astro";
 import Newsletter from "../components/Newsletter.astro";
 import Icon from "../components/Icon.astro";
-import autumnScene from "../assets/autumn-scene.webp";
+import homeBanner from "../assets/boya.webp";
 import {
   SITE,
   categories,
@@ -19,27 +19,66 @@ const featured = await featuredPost();
 const featuredAuthor = getAuthor(featured.author);
 const featuredCategory = getCategory(featured.category);
 const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slug);
+const countdownTarget = "2027-06-07T09:00:00+08:00";
+const jsonLd = {
+  "@context": "https://schema.org" ,
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE.url}/#website`,
+      "url": `${SITE.url}/`,
+      "name": SITE.name,
+      "description": SITE.description,
+      "inLanguage": SITE.locale,
+      "publisher": { "@id": `${SITE.url}/about#person` },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${SITE.url}/blog?q={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": `${SITE.url}/about#person`,
+      "name": "Jysve",
+      "alternateName": ["Sve", "Svecco"],
+      "url": `${SITE.url}/about`,
+      "image": `${SITE.url}/avatars/jysve.webp`,
+      "sameAs": [
+        "https://github.com/Jysve" ,
+        "https://www.zhihu.com/people/Jysve" ,
+        "https://space.bilibili.com/246563710",
+        `${SITE.url}/about`
+      ]
+    }
+  ]
+};
 ---
 
 <BaseLayout
-  title={`${SITE.name} - Writing, design & the slow web`}
-  description={SITE.description}
+  title={`${SITE.name} | ${SITE.description}`}
+  description="Dives into OSS, linux, and math, chronicling the journey of growth. For you, and for me."
   canonical="/"
+  jsonLd={jsonLd}
+  ogImage={SITE.ogImg}
   flushFooter
 >
-  <section class="relative -mt-[calc(4rem+2px)] min-h-[calc(100svh-2rem)] overflow-hidden border-b border-border/60 pt-[calc(4rem+2px)] sm:min-h-[760px]">
-    <Image
-      src={autumnScene}
+  <section data-hero class="relative z-[1] -mt-[calc(4rem+2px)] min-h-[calc(100svh-2rem)] overflow-hidden border-b border-border/60 pt-[calc(4rem+2px)] sm:min-h-[760px]">
+  <Image
+      src={homeBanner}
       alt=""
       class="absolute inset-0 h-full w-full object-cover object-center"
       loading="eager"
       fetchpriority="high"
       decoding="async"
-      width={1600}
-      widths={[640, 960, 1280, 1600]}
+      width={2400}
+      widths={[600, 1200, 1800, 2400]}
       sizes="100vw"
       format="webp"
-      quality={50}
+      quality={65}
     />
     <div
       aria-hidden="true"
@@ -56,25 +95,29 @@ const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slu
     <div class="relative mx-auto flex min-h-[calc(100svh-6rem)] max-w-6xl items-center px-5 py-20 sm:min-h-[680px] sm:py-24">
       <div class="max-w-4xl text-white drop-shadow-[0_1px_18px_rgba(0,0,0,0.28)]">
         <h1 class="font-serif text-[2.5rem] font-medium leading-[1.02] sm:text-6xl lg:text-7xl">
-        An independent magazine on
-          <span class="italic text-white"> writing</span>,
-          <span class="italic text-white"> design</span>, and the
-          <span class="italic text-white"> slow web</span>.
+          Where Will Our Reunion Lie? That's The Question.
         </h1>
         <p class="mt-8 max-w-xl text-lg leading-relaxed text-white/86">
-          Essays, field notes, and conversations &mdash; published occasionally, edited carefully, and meant to be read in a single sitting.
+          The unexamined life is not worth living. We have strived too long, waited too long. The time has come. Face it, seize it. Go.
         </p>
         <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
           <a
             href={`/blog/${featured.slug}`}
-            class="group inline-flex items-center gap-2 border-b border-white pb-1 text-sm font-medium text-white hover:border-white/70 hover:text-white/82"
+            class="group italic inline-flex items-center gap-2 border-b border-white pb-1 text-sm font-medium text-white hover:border-white/70 hover:text-white/82"
           >
-            Begin with this issue's lead essay
+            View the latest update now
             <Icon name="arrow-right" class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </a>
-          <a href="/blog" class="text-sm text-white/76 hover:text-white">
-            Or browse the archive
+          <a href="/blog" class="italic text-sm text-white/76 hover:text-white">
+            Browse the archive
           </a>
+          <div
+            class="inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-sm font-semibold leading-none tabular-nums text-white backdrop-blur-sm"
+            data-countdown
+            data-target={countdownTarget}
+          >
+            <span data-countdown-display>--:--:--:--</span>
+          </div>
         </div>
       </div>
     </div>
@@ -86,7 +129,7 @@ const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slu
         <div class="text-xs font-medium uppercase tracking-wider text-muted-foreground">Featured</div>
         <a href="/blog" class="text-xs text-muted-foreground hover:text-foreground">All writing &rarr;</a>
       </div>
-      <article class="grid gap-10 lg:grid-cols-2">
+      <article class="group grid gap-10 lg:grid-cols-2">
         <a href={`/blog/${featured.slug}`} class="group block" aria-label={`Read ${featured.title}`}>
           <div class="aspect-[4/3] overflow-hidden rounded-md bg-muted">
             {
@@ -118,8 +161,8 @@ const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slu
             <time datetime={featured.date}>{formatDate(featured.date)}</time>
           </div>
           <a href={`/blog/${featured.slug}`} class="mt-2 block py-1">
-            <h2 class="font-serif text-3xl font-semibold leading-tight hover:text-primary sm:text-4xl">
-              {featured.title}
+            <h2 class="font-serif text-3xl font-semibold leading-tight sm:text-4xl">
+              <span class="card-title">{featured.title}</span>
             </h2>
           </a>
           <p class="mt-4 text-lg text-muted-foreground">{featured.excerpt}</p>
@@ -127,7 +170,7 @@ const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slu
             {
               featuredAuthor && (
                 <>
-                  <img
+                  <Image
                     src={featuredAuthor.avatar}
                     alt=""
                     width="28"
@@ -224,4 +267,29 @@ const latest = (await sortedPosts()).filter((post) => post.slug !== featured.slu
       button.addEventListener("click", () => filterCards(button.dataset.homeFilter || ""));
     });
   }
+  document.querySelectorAll("[data-countdown]").forEach((el) => {
+    const display = el.querySelector("[data-countdown-display]");
+    const target = new Date(el.dataset.target).getTime();
+    if (!display || Number.isNaN(target)) return;
+
+    const pad = (n) => String(n).padStart(2, "0");
+    let timer;
+
+    const render = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        display.textContent = "00:00:00:00";
+        if (timer) clearInterval(timer);
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor(diff / 3600000) % 24;
+      const m = Math.floor(diff / 60000) % 60;
+      const s = Math.floor(diff / 1000) % 60;
+      display.textContent = `${d}:${pad(h)}:${pad(m)}:${pad(s)}`;
+    };
+
+    render();
+    timer = setInterval(render, 1000);
+  });
 </script>
