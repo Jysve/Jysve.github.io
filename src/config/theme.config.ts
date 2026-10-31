@@ -17,7 +17,6 @@ export const NAVIGATION = [
   { to: "/", label: "Home" },
   { to: "/blog", label: "Writing" },
   { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
 ];
 
 export const CONTACT = {
