@@ -17,7 +17,7 @@ export function setupCustomScrollbars(lenis) {
     if (frame) return;
     frame = requestAnimationFrame(() => {
       frame = 0;
-      instances.forEach((instance) => instance.update());
+      instances.forEach((instance) => (instance.page || instance.visible) && instance.update());
     });
   };
 

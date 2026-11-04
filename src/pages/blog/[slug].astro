@@ -75,7 +75,7 @@ const jsonLd = {
   flushFooter
 >
   <div class="fixed left-0 right-0 top-0 z-50 h-0.5 bg-transparent">
-    <div data-reading-progress class="h-full bg-primary transition-[width] duration-75" style="width: 0"></div>
+    <div data-reading-progress class="h-full w-full origin-left bg-primary transition-transform duration-75" style="transform: scaleX(0)"></div>
   </div>
 
   <article class="mx-auto max-w-6xl px-5 py-10">
@@ -205,7 +205,7 @@ const jsonLd = {
     if (!progress) return;
     const root = document.documentElement;
     const total = root.scrollHeight - root.clientHeight;
-    progress.style.width = `${total > 0 ? (root.scrollTop / total) * 100 : 0}%`;
+    progress.style.transform = `scaleX(${total > 0 ? root.scrollTop / total : 0})`;
   };
   updateProgress();
   window.addEventListener("scroll", updateProgress, { passive: true });
