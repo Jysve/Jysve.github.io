@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
-export { SITE, authors, categories, tags } from "../config/theme.config.ts";
-import { authors, categories, tags } from "../config/theme.config.ts";
+export { SITE, profile, categories, tags } from "../config/theme.config.ts";
+import { categories, tags } from "../config/theme.config.ts";
 
 const isoDate = (date) => date?.toISOString().slice(0, 10);
 const wordsPerMinute = 180;
@@ -29,15 +29,12 @@ export const posts = async () =>
   (await getCollection("blog", ({ data }) => !data.draft)).map(normalizePost);
 
 export const getPost = async (slug) => (await posts()).find((post) => post.slug === slug);
-export const getAuthor = (slug) => authors.find((author) => author.slug === slug);
 export const getCategory = (slug) => categories.find((category) => category.slug === slug);
 export const getTag = (slug) => tags.find((tag) => tag.slug === slug);
 export const postsByCategory = async (slug) =>
   (await sortedPosts()).filter((post) => post.category === slug);
 export const postsByTag = async (slug) =>
   (await sortedPosts()).filter((post) => post.tags.includes(slug));
-export const postsByAuthor = async (slug) =>
-  (await sortedPosts()).filter((post) => post.author === slug);
 export const sortedPosts = async () =>
   [...(await posts())].sort((a, b) => (a.date < b.date ? 1 : -1));
 export const featuredPost = async () => {

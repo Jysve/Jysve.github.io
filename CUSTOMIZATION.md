@@ -4,7 +4,7 @@ Use this guide when adapting Quiet Pages for a real publication. [README.md](./R
 
 ## Site Settings
 
-Edit [src/config/theme.config.ts](./src/config/theme.config.ts) first. It is the theme's single source of truth for site metadata, navigation, contact details, form endpoints, social links, authors, categories, and tags. Almost nothing in the theme hardcodes these — components read them through [src/lib/blog-data.js](./src/lib/blog-data.js), which re-exports the config alongside the post query helpers.
+Edit [src/config/theme.config.ts](./src/config/theme.config.ts) first. It is the theme's single source of truth for site metadata, navigation, contact details, form endpoints, social links, the personal profile, categories, and tags. Almost nothing in the theme hardcodes these — components read them through [src/lib/blog-data.js](./src/lib/blog-data.js), which re-exports the config alongside the post query helpers.
 
 `SITE` carries the name, description, locale, language, and repository URL. The name fills the header wordmark, the footer, every page title suffix, and the RSS channel; the description is the default meta description and the footer standfirst.
 
@@ -22,18 +22,9 @@ SITE_URL=https://your-domain.com npm run build
 
 `PUBLIC_SITE_URL` works too. **Set it in the shell or in your host's environment variables, not only in a `.env` file.** The two consumers read it from different places: [astro.config.mjs](./astro.config.mjs) reads `process.env`, which a `.env` file does not populate, while [src/config/theme.config.ts](./src/config/theme.config.ts) reads `import.meta.env`, which it does. Configure only a `.env` file and you get a build where the sitemap, robots, and RSS point at your domain while canonical and Open Graph URLs still point at the fallback — the worst of both. If you would rather not depend on the environment at all, replace the fallback string in both files with your domain.
 
-## Authors
+## Profile
 
-Authors live in the `authors` array in [src/config/theme.config.ts](./src/config/theme.config.ts). Each entry needs a `slug`, `name`, `bio`, `longBio`, and `avatar`:
-
-- `slug` is what a post's `author` frontmatter refers to, and it becomes `/authors/<slug>`.
-- `bio` is the one-liner under the author card at the foot of an article and in the sidebar.
-- `longBio` is the standfirst on the author page.
-- `avatar` is a path under `public/`. The bundled files are initials-based SVGs in [public/avatars](./public/avatars) — replace them with photographs and keep them square, since they are rendered as circles at 28px, 40px, 56px, and 96px.
-
-An `author` value with no matching entry is not a build error: the byline, the author card, and the avatar are simply skipped, and the post still publishes. That keeps a renamed author from breaking a build, but it also means a typo fails quietly — check an article page after renaming a slug.
-
-`authors[0]` has a second job: [src/components/Sidebar.astro](./src/components/Sidebar.astro) uses it as the masthead editor. Order the array with that in mind, or edit the component to pick a specific slug.
+This is a single-writer blog, so posts have no author field or author archive. The `profile` object in [src/config/theme.config.ts](./src/config/theme.config.ts) holds the site's `name`, `bio`, and `avatar`. [src/components/Sidebar.astro](./src/components/Sidebar.astro) uses it for the masthead editor, while article structured data and RSS use the profile name as the creator. The avatar is a square path under `public/` and is rendered as a circle in the sidebar.
 
 ## Categories and Tags
 
@@ -48,13 +39,13 @@ So when you add a category or tag to a post, add it to the config in the same co
 Two smaller consequences worth knowing:
 
 - The footer's **Sections** column shows the first five categories, in declared order. Reorder the array to change which five appear.
-- [src/pages/sitemap.xml.js](./src/pages/sitemap.xml.js) lists every configured category, tag, and author regardless of whether anything is published under it, so a leftover tag becomes a crawlable, empty page in your sitemap. Prune the config rather than leaving unused entries behind.
+- [src/pages/sitemap.xml.js](./src/pages/sitemap.xml.js) lists every configured category and tag regardless of whether anything is published under it, so a leftover tag becomes a crawlable, empty page in your sitemap. Prune the config rather than leaving unused entries behind.
 
 ## Post Frontmatter
 
 Every post is a folder under [src/content/blog](./src/content/blog) containing `index.mdx` and its images. The schema in [src/content.config.js](./src/content.config.js) validates the frontmatter, and the folder name becomes the slug and the URL, `/blog/<folder>`.
 
-Required: `title`, `excerpt`, `date`, `category`, `tags`, `author`, `thumbnail`, `thumbnailAlt`.
+Required: `title`, `excerpt`, `date`, `category`, `tags`, `thumbnail`, `thumbnailAlt`.
 
 Optional, and worth knowing about:
 
@@ -73,9 +64,9 @@ Optional, and worth knowing about:
 
 **The hero** uses [src/assets/autumn-scene.webp](./src/assets/autumn-scene.webp) as a full-bleed image behind the wordmark, with the header rendered transparent over it. Replace the file, or swap the import for another asset. It is the page's LCP image, so it is loaded eagerly with `fetchpriority="high"` and served through Astro's pipeline at four widths — keep those attributes on whatever replaces it. The transparent-header treatment is driven by `data-home-header` and the rules in [src/styles.css](./src/styles.css); if your replacement image is light, adjust the two gradient overlays in the hero rather than the header rules, since the header borrows its white text from the overlay.
 
-**The featured block** shows the newest post flagged `featured: true`, falling back to the newest post overall — so the slot is never empty on a site that has flagged nothing. Flag more than one and the newest flagged post wins; the rest simply appear in the grid below.
+**The featured block** shows the newest post flagged `featured: true`, falling back to the newest post overall — so the slot is never empty on a site that has flagged nothing. Flag more than one and the newest flagged post wins; featured posts also remain in the grid below.
 
-**The Latest grid** lists every post except the featured one, six at a time, with a row of category buttons above it. Those buttons filter client-side, hold no URL state, and are separate from the archive's filters — this is a homepage teaser, not an archive. The cap of six appears twice, as `index >= 6` in the markup and `visible < 6` in the script; change both together, or the button filtering and the initial render will disagree.
+**The Latest grid** shows the featured post first with an orange `Pinned` label, followed by the two newest remaining posts. The featured post stays visible and first for every category filter; only the other two slots are filtered, so a category with no matching posts still shows the featured post. The buttons filter client-side, hold no URL state, and are separate from the archive's filters. The initial cap appears as `index >= 3` in the markup, while the script always shows the first card and caps the remaining matches with `visible < 2`; change both together if adjusting the layout.
 
 ## The Archive and Its Filters
 
@@ -91,10 +82,10 @@ State lives in the URL as `?q=&cat=&tag=&page=`, pushed with `history.pushState`
 
 `pageSize` at the top of the page script sets how many posts the list reveals at a time (5 by default) and what **Load more** adds.
 
-To add a third dimension — by author, say — five things need to line up:
+To add another filter dimension, five things need to line up:
 
 1. Emit the value as a `data-` attribute on the card in [src/components/PostCard.astro](./src/components/PostCard.astro), next to `data-category` and `data-tags`.
-2. Add a `<details>` menu whose rows carry `data-filter="author"` and `data-value="<slug>"`, following the two already there.
+2. Add a `<details>` menu whose rows carry your `data-filter` name and `data-value="<slug>"`, following the two already there.
 3. Add an entry to `emptyLabels` in the page script, which supplies the pill's text when nothing is selected.
 4. Add the comparison to `matchesState`, which is the one place filtering is decided — the counts, the empty state, and the pagination all run through it.
 5. Add the parameter to `writeUrl` and `stateFromUrl` so it survives a reload.
@@ -107,7 +98,7 @@ Search is entirely static and client-side, with no index file and no network req
 
 Two consequences to be aware of before you rely on it:
 
-- **Only titles and excerpts are matched** — not tags, categories, authors, or article bodies. To widen it, append those values to `searchable` in `PostCard.astro`; the archive picks up whatever is in the attribute with no further changes.
+- **Only titles and excerpts are matched** — not tags, categories, or article bodies. To widen it, append those values to `searchable` in `PostCard.astro`; the archive picks up whatever is in the attribute with no further changes.
 - **The corpus is the rendered page.** The archive ships every published post's markup, which is what makes search free, and also what sets the ceiling: comfortable into the low hundreds of posts, at which point either paginate the archive server-side or move to a generated index — [Pagefind](https://pagefind.app/) is the usual next step and is deliberately not a dependency here.
 
 Results update on submit rather than on every keystroke. To search as you type, listen for `input` on the query field in addition to `submit` on the form; the render path is already idempotent.
@@ -186,7 +177,6 @@ Two of its lists are simpler than their labels suggest: **Recent** is the four n
 | Article   | `src/pages/blog/[slug].astro`                              | `/blog/<slug>`       |
 | Category  | `src/pages/categories/[slug].astro`                        | `/categories/<slug>` |
 | Tag       | `src/pages/tags/[slug].astro`                              | `/tags/<slug>`       |
-| Author    | `src/pages/authors/[slug].astro`                           | `/authors/<slug>`    |
 | About     | [src/pages/about.astro](./src/pages/about.astro)           | `/about`             |
 | Contact   | [src/pages/contact.astro](./src/pages/contact.astro)       | `/contact`           |
 | Not found | [src/pages/404.astro](./src/pages/404.astro)               | `/404`               |
@@ -194,7 +184,7 @@ Two of its lists are simpler than their labels suggest: **Recent** is the four n
 | Sitemap   | [src/pages/sitemap.xml.js](./src/pages/sitemap.xml.js)     | `/sitemap.xml`       |
 | Robots    | [src/pages/robots.txt.js](./src/pages/robots.txt.js)       | `/robots.txt`        |
 
-The archive is the only listing that grows without adding routes — it reveals posts in batches in the browser rather than paginating. Category, tag, and author pages render their full list. If a section outgrows one page, the taxonomy routes are where to add Astro's `paginate`.
+The archive is the only listing that grows without adding routes — it reveals posts in batches in the browser rather than paginating. Category and tag pages render their full list. If a section outgrows one page, the taxonomy routes are where to add Astro's `paginate`.
 
 Replace the starter copy on the About and Contact pages with real masthead, editorial, and legal information. Neither reads its body text from config; both are ordinary pages.
 
@@ -238,13 +228,13 @@ To change typefaces: drop your `woff2` files into `public/fonts`, rewrite the ma
 
 Only article pages emit structured data, as `BlogPosting`. The breadcrumb trail rendered by [src/components/Breadcrumbs.astro](./src/components/Breadcrumbs.astro) is presentational; add a `BreadcrumbList` object to the page's `jsonLd` if you want it in search results.
 
-The feed, sitemap, and robots endpoints are plain Astro endpoints, not integrations, so they are easy to edit: [rss.xml.js](./src/pages/rss.xml.js) publishes titles, links, dates, authors, and excerpts for every non-draft post — no full article bodies, so subscribers click through. Whatever you change, keep drafts excluded: all three read the same `sortedPosts()` helper, which filters them out once.
+The feed, sitemap, and robots endpoints are plain Astro endpoints, not integrations, so they are easy to edit: [rss.xml.js](./src/pages/rss.xml.js) publishes titles, links, dates, the profile name as creator, and excerpts for every non-draft post — no full article bodies, so subscribers click through. Whatever you change, keep drafts excluded: all three read the same `sortedPosts()` helper, which filters them out once.
 
 ## Before Launch
 
 - Set `SITE_URL` in the build environment, and confirm a built page's canonical tag shows your domain (see [Production URL](#production-url)).
 - Replace `SITE`, `NAVIGATION`, `CONTACT`, and `SOCIAL_LINKS` with real values, and delete the demo repository link.
-- Replace the demo authors and their avatars; remember `authors[0]` fronts the sidebar.
+- Replace the profile details and avatar.
 - Prune categories and tags down to what you actually publish, so no empty taxonomy page reaches the sitemap.
 - Replace the eight demo posts in [src/content/blog](./src/content/blog), including their images and credits.
 - Fill in `FORMS.contact.action` and `FORMS.newsletter.action`, then submit both forms against the real endpoints.

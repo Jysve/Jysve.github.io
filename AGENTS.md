@@ -134,8 +134,8 @@ These instructions apply to all Astro theme work. Prioritize clean, reusable, ac
 - Provide sensible defaults for optional metadata.
 - Avoid requiring users to duplicate the same SEO fields in many places when defaults can be generated safely.
 - Support draft or unpublished content only when the theme explicitly needs it.
-- Make dates, authors, categories, tags, and excerpts consistent.
-- Make sure generated archive, tag, category, author, and pagination pages have useful metadata.
+- Make dates, categories, tags, and excerpts consistent.
+- Make sure generated archive, tag, category, and pagination pages have useful metadata.
 - Avoid rendering empty UI sections when content is missing.
 
 ## Image and Media Guidelines

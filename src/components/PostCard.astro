@@ -1,9 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import { getAuthor, getCategory, formatDate } from "../lib/blog-data.js";
+import { getCategory, formatDate } from "../lib/blog-data.js";
 
-const { post, variant = "default", hidden = false } = Astro.props;
-const author = getAuthor(post.author);
+const { post, variant = "default", hidden = false, pinned = false } = Astro.props;
 const category = getCategory(post.category);
 const searchable = `${post.title} ${post.excerpt}`.toLowerCase();
 const thumbnailIsString = typeof post.thumbnail === "string";
@@ -13,7 +12,7 @@ const thumbnailIsString = typeof post.thumbnail === "string";
   variant === "compact" ? (
     <a
       href={`/blog/${post.slug}`}
-      class="group block"
+      class="relative group block"
       data-post-card
       data-category={post.category}
       data-tags={post.tags.join(" ")}
@@ -30,7 +29,7 @@ const thumbnailIsString = typeof post.thumbnail === "string";
     </a>
   ) : variant === "list" ? (
     <article
-      class="group grid gap-6 border-b border-border/60 py-8 sm:grid-cols-[1fr_220px]"
+      class="relative group grid gap-6 border-b border-border/60 py-8 sm:grid-cols-[1fr_220px]"
       data-post-card
       data-category={post.category}
       data-tags={post.tags.join(" ")}
@@ -40,27 +39,21 @@ const thumbnailIsString = typeof post.thumbnail === "string";
       <div>
         <div class="flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground">
           {category && (
-            <a href={`/categories/${category.slug}`} class="inline-flex min-h-9 items-center hover:text-foreground">
+            <a href={`/categories/${category.slug}`} class="relative z-10 inline-flex min-h-9 items-center hover:text-foreground">
               {category.name}
             </a>
           )}
           <span>&middot;</span>
           <time datetime={post.date}>{formatDate(post.date)}</time>
         </div>
-        <a href={`/blog/${post.slug}`} class="mt-1 block py-1">
+        <a href={`/blog/${post.slug}`} class="mt-1 block py-1 after:absolute after:inset-0 after:content-['']">
           <h2 class="font-serif text-2xl font-semibold leading-tight sm:text-3xl">
             <span class="card-title">{post.title}</span>
           </h2>
         </a>
         <p class="mt-3 text-muted-foreground">{post.excerpt}</p>
-        <div class="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
-          {author && (
-            <a href={`/authors/${author.slug}`} class="hover:text-foreground">
-              {author.name}
-            </a>
-          )}
-          <span>&middot;</span>
-          <span>{post.readingTime} min read</span>
+        <div class="mt-4 text-xs text-muted-foreground">
+          {post.readingTime} min read
         </div>
       </div>
       {post.thumbnail && (
@@ -96,7 +89,7 @@ const thumbnailIsString = typeof post.thumbnail === "string";
     </article>
   ) : (
     <article
-      class="group"
+      class="relative group"
       data-post-card
       data-category={post.category}
       data-tags={post.tags.join(" ")}
@@ -136,22 +129,25 @@ const thumbnailIsString = typeof post.thumbnail === "string";
       <div class="mt-4">
         <div class="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground">
           {category && (
-            <a href={`/categories/${category.slug}`} class="inline-flex min-h-9 items-center hover:text-foreground">
+            <a href={`/categories/${category.slug}`} class="relative z-10 inline-flex min-h-9 items-center hover:text-foreground">
               {category.name}
             </a>
           )}
           <span>&middot;</span>
           <time datetime={post.date}>{formatDate(post.date)}</time>
+          {pinned && (
+            <span class="ml-1 rounded-full border border-primary/50 px-2 py-0.5 text-[0.65rem] font-medium normal-case tracking-normal text-primary">
+              Pinned
+            </span>
+          )}
         </div>
-        <a href={`/blog/${post.slug}`} class="mt-1 block py-1">
+        <a href={`/blog/${post.slug}`} class="mt-1 block py-1 after:absolute after:inset-0 after:content-['']">
           <h3 class="mt-1 font-serif text-lg font-semibold leading-snug text-foreground">
             <span class="card-title">{post.title}</span>
           </h3>
         </a>
         <p class="mt-2 line-clamp-2 text-sm text-muted-foreground">{post.excerpt}</p>
-        <div class="mt-3 text-xs text-muted-foreground">
-          {author?.name} &middot; {post.readingTime} min
-        </div>
+        <div class="mt-3 text-xs text-muted-foreground">{post.readingTime} min</div>
       </div>
     </article>
   )

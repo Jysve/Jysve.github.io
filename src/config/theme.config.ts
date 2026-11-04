@@ -17,7 +17,6 @@ export const NAVIGATION = [
   { to: "/", label: "Home" },
   { to: "/blog", label: "Writing" },
   { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
 ];
 
 export const CONTACT = {
@@ -48,15 +47,11 @@ export const SOCIAL_LINKS = [
   { href: CONTACT.discord, label: `Jysve on Discord`, icon: "discord" },
 ];
 
-export const authors = [
-  {
-    slug: "Jysve",
-    name: "Jysve",
-    bio: "Explore. Dream. Discover.",
-    longBio: "The purpose of computing is insight, not numbers.",
-    avatar: "/avatars/jysve.webp",
-  },
-];
+export const profile = {
+  name: "Jysve",
+  bio: "Explore. Dream. Discover.",
+  avatar: "/avatars/jysve.webp",
+};
 
 export const categories = [
   { slug: "essays", name: "Essays" },

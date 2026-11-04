@@ -9,7 +9,7 @@ const { flush = false } = Astro.props;
 <footer class:list={[flush ? "mt-0" : "mt-24", "border-t border-border/60", "relative z-[1] bg-background"]}>
   <div class="mx-auto grid max-w-6xl gap-10 px-5 py-12 md:grid-cols-4">
     <div class="md:col-span-2">
-      <div class="font-serif text-lg font-semibold">{SITE.name}</div>
+      <div class="font-serif text-lg font-semibold italic">{SITE.name}</div>
       <p class="mt-3 max-w-sm text-sm leading-relaxed text-muted-foreground">
         {SITE.description}
       </p>
@@ -29,7 +29,7 @@ const { flush = false } = Astro.props;
         {
           categories.slice(0, 5).map((category) => (
             <li>
-              <a href={`/categories/${category.slug}`} class="text-foreground/80 hover:text-foreground">
+              <a href={`/categories/${category.slug}`} class="footer-nav-link text-foreground/80 hover:text-foreground">
                 {category.name}
               </a>
             </li>
@@ -40,10 +40,10 @@ const { flush = false } = Astro.props;
     <div>
       <div class="text-xs font-medium uppercase tracking-wider text-muted-foreground">The site</div>
       <ul class="mt-3 space-y-2 text-sm">
-        <li><a href="/about" class="hover:text-foreground">About</a></li>
-        <li><a href="/contact" class="hover:text-foreground">Contact</a></li>
-        <li><a href="/blog" class="hover:text-foreground">Archive</a></li>
-        <li><a href="/rss.xml" class="hover:text-foreground">RSS feed</a></li>
+        <li><a href="/about" class="footer-nav-link text-foreground/80 hover:text-foreground">About</a></li>
+        <li><a href="/contact" class="footer-nav-link text-foreground/80 hover:text-foreground">Contact</a></li>
+        <li><a href="/blog" class="footer-nav-link text-foreground/80 hover:text-foreground">Archive</a></li>
+        <li><a href="/rss.xml" class="footer-nav-link text-foreground/80 hover:text-foreground">RSS feed</a></li>
       </ul>
     </div>
   </div>
@@ -61,3 +61,22 @@ const { flush = false } = Astro.props;
     </div>
   </div>
 </footer>
+
+<style>
+  .footer-nav-link {
+    display: inline-block;
+    padding-bottom: 0.125rem;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0 1px;
+    transition:
+      color 150ms ease,
+      background-size 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .footer-nav-link:hover,
+  .footer-nav-link:focus-visible {
+    background-size: 100% 1px;
+  }
+</style>

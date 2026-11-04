@@ -95,17 +95,19 @@ const ogImageUrl = absoluteUrl(ogImage);
       import Lenis from "lenis";
       import "lenis/dist/lenis.css";
       import mediumZoom from "medium-zoom";
+      import { setupCustomScrollbars } from "../lib/custom-scrollbars.js";
 
       const lenis = new Lenis({
         lerp: 0.12,
         anchors: true,
         autoRaf: true,
       });
+      setupCustomScrollbars(lenis);
       const cursor = document.getElementById("custom-cursor");
       if (cursor && matchMedia("(pointer: fine)").matches) {
         let raf = 0, x = -100, y = -100;
 
-        addEventListener("mousemove", (e) => {
+        addEventListener("pointermove", (e) => {
           x = e.clientX;
           y = e.clientY;
           cursor.classList.add("is-visible");
@@ -116,7 +118,7 @@ const ogImageUrl = absoluteUrl(ogImage);
             });
           }
           const interactive = e.target.closest?.(
-            "a, button, [role='button'], select, label, summary, input, textarea, .medium-zoom-image"
+            "a, button, [role='button'], [role='scrollbar'], select, label, summary, input, textarea, .medium-zoom-image"
           );
           cursor.classList.toggle("is-pointer", !!interactive);
         }, { passive: true });
@@ -135,7 +137,7 @@ const ogImageUrl = absoluteUrl(ogImage);
         }
       );
     </script>
-    <div id="custom-cursor" aria-hidden="true">
+    <div id="custom-cursor" popover="manual" aria-hidden="true">
       <svg class="cursor-icon cursor-icon--default" width="24" height="24" viewBox="0 0 24 24" fill="none">
         <path fill="none" stroke="currentColor" stroke-width="2" d="M 4 4 l 8 24 l 19 -2 Z"/>
       </svg>

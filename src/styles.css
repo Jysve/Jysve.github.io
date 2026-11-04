@@ -24,6 +24,17 @@
 }
 
 @font-face {
+  font-family: "Fraunces";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/fraunces-italic.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
   font-family: "Ubuntu Mono";
   font-style: normal;
   font-weight: 400 500;
@@ -68,17 +79,17 @@
 :root {
   color-scheme: light;
   --radius: 0.5rem;
-  --background: oklch(0.985 0.004 90);
-  --foreground: oklch(0.18 0.01 60);
-  --card: oklch(0.985 0.004 90);
-  --card-foreground: oklch(0.18 0.01 60);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.01 60);
+  --background: oklch(0.972 0.008 85);
+  --foreground: oklch(0.25 0.012 60);
+  --card: oklch(0.99 0.005 85);
+  --card-foreground: oklch(0.25 0.012 60);
+  --popover: oklch(0.99 0.005 85);
+  --popover-foreground: oklch(0.25 0.012 60);
   --primary: oklch(0.55 0.16 30);
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.95 0.005 90);
   --secondary-foreground: oklch(0.2 0.01 60);
-  --muted: oklch(0.95 0.005 90);
+  --muted: oklch(0.945 0.008 80);
   --muted-foreground: oklch(0.5 0.01 60);
   --accent: oklch(0.93 0.01 60);
   --accent-foreground: oklch(0.2 0.01 60);
@@ -93,17 +104,17 @@
 
 .dark {
   color-scheme: dark;
-  --background: oklch(0.16 0.005 80);
-  --foreground: oklch(0.95 0.005 80);
-  --card: oklch(0.16 0.005 80);
-  --card-foreground: oklch(0.95 0.005 80);
-  --popover: oklch(0.2 0.005 80);
-  --popover-foreground: oklch(0.95 0.005 80);
+  --background: oklch(0.2 0.008 80);
+  --foreground: oklch(0.9 0.006 80);
+  --card: oklch(0.235 0.008 80);
+  --card-foreground: oklch(0.9 0.006 80);
+  --popover: oklch(0.235 0.008 80);
+  --popover-foreground: oklch(0.9 0.006 80);
   --primary: oklch(0.72 0.14 35);
   --primary-foreground: oklch(0.16 0.005 80);
   --secondary: oklch(0.22 0.005 80);
   --secondary-foreground: oklch(0.95 0.005 80);
-  --muted: oklch(0.22 0.005 80);
+  --muted: oklch(0.26 0.008 80);
   --muted-foreground: oklch(0.65 0.01 80);
   --accent: oklch(0.24 0.005 80);
   --accent-foreground: oklch(0.95 0.005 80);
@@ -139,7 +150,14 @@
     background-color: color-mix(in oklab, var(--color-primary) 25%, transparent);
   }
 
-  :where(a, button, input, textarea, select, summary):focus-visible {
+  :where(
+    a,
+    button,
+    input:not([data-search-input]):not([data-archive-query]),
+    textarea,
+    select,
+    summary
+  ):focus-visible {
     outline: 2px solid var(--color-ring) !important;
     outline-offset: 3px;
   }
@@ -245,6 +263,83 @@
   [data-home-header][data-panel-open="true"] .home-header-action:focus-visible {
     background-color: var(--color-muted);
     color: var(--color-foreground);
+  }
+
+  [data-search-panel][open] {
+    animation: search-dialog-in 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  [data-search-panel].is-closing {
+    animation: search-dialog-out 140ms ease-in both;
+  }
+
+  [data-search-panel]::backdrop {
+    animation: search-backdrop-in 180ms ease-out both;
+  }
+
+  [data-search-panel].is-closing::backdrop {
+    animation: search-backdrop-out 140ms ease-in both;
+  }
+
+  [data-archive-search] {
+    animation: search-field-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes search-dialog-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes search-dialog-out {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(0.5rem) scale(0.98);
+    }
+  }
+
+  @keyframes search-backdrop-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes search-backdrop-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes search-field-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-search-panel]::backdrop {
+      animation: none;
+    }
   }
 
   /* Archive filters: pill triggers over <details> menus, so a blog with dozens of
@@ -659,6 +754,11 @@ section[data-footnotes] {
   margin-block: 0.35em;
 }
 
+.prose-article [data-footnote-ref],
+.prose-article :is(.footnotes, section[data-footnotes]) li {
+  scroll-margin-top: max(6rem, 30vh);
+}
+
 .footnotes a[data-footnote-backref] {
   text-decoration: none;
   font-size: 0.9em;
@@ -707,18 +807,6 @@ section[data-footnotes] {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.5rem 0.25rem;
-  scrollbar-width: thin;
-}
-
-.katex-display::-webkit-scrollbar {
-  height: 6px;
-}
-.katex-display::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, currentColor 25%, transparent);
-  border-radius: 3px;
-}
-
-.katex-display {
   mask-image: linear-gradient(
     to right,
     transparent 0,
@@ -733,6 +821,59 @@ section[data-footnotes] {
     black calc(100% - 5px),
     transparent 100%
   );
+}
+
+.custom-scrollbar {
+  position: fixed;
+  z-index: 9000;
+  border-radius: 999px;
+  outline: none;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.custom-scrollbar[hidden] {
+  display: none;
+}
+
+.custom-scrollbar[data-scrollbar-page],
+.custom-scrollbar.is-active,
+.custom-scrollbar:hover,
+.custom-scrollbar:focus-visible {
+  opacity: 0.65;
+}
+
+.custom-scrollbar:hover,
+.custom-scrollbar.is-dragging,
+.custom-scrollbar:focus-visible {
+  opacity: 1;
+}
+
+.custom-scrollbar-thumb {
+  border-radius: inherit;
+  background: color-mix(in oklab, var(--color-foreground) 38%, transparent);
+  clip-path: inset(0 2px round 999px);
+}
+
+.custom-scrollbar[data-scrollbar="horizontal"] .custom-scrollbar-thumb {
+  background: color-mix(in oklab, var(--color-foreground) 30%, transparent);
+  clip-path: inset(3px 2px round 999px);
+}
+
+.is-scrollbar-dragging,
+.is-scrollbar-dragging * {
+  user-select: none !important;
+}
+
+@media (pointer: fine) {
+  [data-custom-scrollbar] {
+    scrollbar-width: none;
+  }
+
+  [data-custom-scrollbar]::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 }
 
 @media (pointer: fine) {
@@ -768,10 +909,17 @@ section[data-footnotes] {
 #custom-cursor {
   position: fixed;
   top: 0;
+  right: auto;
+  bottom: auto;
   left: 0;
   z-index: 9999;
   width: 16px;
   height: 16px;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  overflow: visible;
+  background: transparent;
   pointer-events: none;
   mix-blend-mode: difference;
   color: white;

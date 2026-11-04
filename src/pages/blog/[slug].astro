@@ -9,7 +9,7 @@ import Newsletter from "../../components/Newsletter.astro";
 import Icon from "../../components/Icon.astro";
 import {
   SITE,
-  getAuthor,
+  profile,
   getCategory,
   getTag,
   formatDate,
@@ -24,7 +24,6 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const post = normalizePost(entry);
-const author = getAuthor(post.author);
 const category = getCategory(post.category);
 const { Content, headings } = await render(entry);
 const toc = headings
@@ -56,14 +55,12 @@ const jsonLd = {
   datePublished: post.date,
   dateModified: post.updated || post.date,
   image: thumbnailUrl,
-  author: author
-    ? {
-      "@type": "Person",
-      "@id": `${SITE.url}/about#person`,
-      "name": author.name,
-      "url": `${SITE.url}/authors/${author.slug}`,
-    }
-    : undefined,
+  author: {
+    "@type": "Person",
+    "@id": `${SITE.url}/about#person`,
+    "name": profile.name,
+    "url": `${SITE.url}/about`,
+  },
   mainEntityOfPage: canonicalUrl,
 };
 ---
@@ -94,14 +91,6 @@ const jsonLd = {
         {post.title}
       </h1>
       <p class="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground">{post.excerpt}</p>
-      <div class="flex mt-4 justify-center">
-        {author && (
-          <a href={`/authors/${author.slug}`} class="flex items-center gap-2 hover:text-primary">
-            <img src={author.avatar} alt="" width="28" height="28" class="h-8 w-8 rounded-full" />
-            {author.name}
-          </a>
-        )}
-      </div>
       <div class="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
         <time datetime={post.date}>{formatDate(post.date)}</time>
         {post.updated && <><span>&middot;</span><span class="italic">Updated {formatDate(post.updated)}</span></>}
@@ -186,20 +175,6 @@ const jsonLd = {
           </button>
         </div>
 
-        {
-          author && (
-            <div class="mt-10 flex items-start gap-4 rounded-md border border-border p-5">
-              <img src={author.avatar} alt="" width="56" height="56" class="h-14 w-14 rounded-full" />
-              <div>
-                <div class="text-xs uppercase tracking-wider text-muted-foreground">Written by</div>
-                <a href={`/authors/${author.slug}`} class="font-serif text-lg font-semibold hover:text-primary">
-                  {author.name}
-                </a>
-                <p class="mt-1 text-sm text-muted-foreground">{author.bio}</p>
-              </div>
-            </div>
-          )
-        }
       </div>
 
       <aside class="hidden lg:block">
