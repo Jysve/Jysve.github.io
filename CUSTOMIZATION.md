@@ -206,9 +206,9 @@ The `dark` variant is registered as `@custom-variant dark (&:is(.dark *))`, so `
 
 ## Fonts
 
-Three families are self-hosted from [public/fonts](./public/fonts) as latin-subset `woff2` files: Fraunces for display and headings (`--font-serif`), Inter for UI and body text (`--font-sans`), and JetBrains Mono for code and numeric labels (`--font-mono`). Each is declared with a variable weight range, `font-display: swap`, and a `unicode-range` so the browser can skip the file for text it cannot cover.
+Three families are self-hosted from [public/fonts](./public/fonts) as latin-subset `woff2` files: Cormorant Garamond for display and headings (`--font-serif`), Scope for UI and body text (`--font-sans`), and Ubuntu Mono for code and numeric labels (`--font-mono`). Cormorant Garamond has separate regular and italic faces. Each family uses `font-display: swap` and a `unicode-range` so the browser can skip files for text it cannot cover.
 
-Only Inter and Fraunces are preloaded in [src/layouts/BaseLayout.astro](./src/layouts/BaseLayout.astro), since those two carry everything above the fold. JetBrains Mono is left to load on demand.
+Only Scope and Cormorant Garamond Regular are preloaded in [src/layouts/BaseLayout.astro](./src/layouts/BaseLayout.astro), since those two carry everything above the fold. Cormorant Garamond Italic and Ubuntu Mono are left to load on demand.
 
 To change typefaces: drop your `woff2` files into `public/fonts`, rewrite the matching `@font-face` rules and the `--font-*` tokens at the top of [src/styles.css](./src/styles.css), and update the two preload tags. If you add a family, subset it — an unsubsetted variable font will undo the theme's page weight.
 
