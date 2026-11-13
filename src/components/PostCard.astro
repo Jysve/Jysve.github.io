@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import { getCategory, formatDate } from "../lib/blog-data.js";
 
-const { post, variant = "default", hidden = false, pinned = false } = Astro.props;
+const { post, variant = "default", hidden = false, pinned = false, titleClass = "text-lg" } = Astro.props;
 const category = getCategory(post.category);
 const searchable = `${post.title} ${post.excerpt}`.toLowerCase();
 const thumbnailIsString = typeof post.thumbnail === "string";
@@ -11,7 +11,7 @@ const thumbnailIsString = typeof post.thumbnail === "string";
 {
   variant === "compact" ? (
     <a
-      href={`/blog/${post.slug}`}
+      href={`/pub/${post.slug}`}
       class="relative group block"
       data-post-card
       data-category={post.category}
@@ -46,7 +46,7 @@ const thumbnailIsString = typeof post.thumbnail === "string";
           <span>&middot;</span>
           <time datetime={post.date}>{formatDate(post.date)}</time>
         </div>
-        <a href={`/blog/${post.slug}`} class="mt-1 block py-1 after:absolute after:inset-0 after:content-['']">
+        <a href={`/pub/${post.slug}`} class="mt-1 block py-1 after:absolute after:inset-0 after:content-['']">
           <h2 class="font-serif text-2xl font-semibold leading-tight sm:text-3xl">
             <span class="card-title">{post.title}</span>
           </h2>
@@ -57,7 +57,7 @@ const thumbnailIsString = typeof post.thumbnail === "string";
         </div>
       </div>
       {post.thumbnail && (
-        <a href={`/blog/${post.slug}`} class="block" aria-label={`Read ${post.title}`}>
+        <a href={`/pub/${post.slug}`} class="block" aria-label={`Read ${post.title}`}>
           <div class="aspect-[4/3] overflow-hidden rounded-md bg-muted sm:aspect-square">
             {
               thumbnailIsString ? (
@@ -97,7 +97,7 @@ const thumbnailIsString = typeof post.thumbnail === "string";
       hidden={hidden}
     >
       {post.thumbnail && (
-        <a href={`/blog/${post.slug}`} class="block" aria-label={`Read ${post.title}`}>
+        <a href={`/pub/${post.slug}`} class="block" aria-label={`Read ${post.title}`}>
           <div class="aspect-[16/10] overflow-hidden rounded-md bg-muted">
             {
               thumbnailIsString ? (
@@ -141,8 +141,8 @@ const thumbnailIsString = typeof post.thumbnail === "string";
             </span>
           )}
         </div>
-        <a href={`/blog/${post.slug}`} class="mt-1 block py-1 after:absolute after:inset-0 after:content-['']">
-          <h3 class="mt-1 font-serif text-lg font-semibold leading-snug text-foreground">
+        <a href={`/pub/${post.slug}`} class="mt-1 block py-1 after:absolute after:inset-0 after:content-['']">
+          <h3 class:list={["mt-1 font-serif font-semibold leading-snug text-foreground", titleClass]}>
             <span class="card-title">{post.title}</span>
           </h3>
         </a>

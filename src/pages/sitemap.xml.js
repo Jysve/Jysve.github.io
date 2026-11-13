@@ -6,11 +6,11 @@ export async function GET() {
   const posts = await sortedPosts();
   const entries = [
     { path: "/", changefreq: "weekly", priority: "1.0" },
-    { path: "/blog", changefreq: "daily", priority: "0.9" },
+    { path: "/pub", changefreq: "daily", priority: "0.9" },
     { path: "/about", changefreq: "monthly", priority: "0.6" },
     { path: "/contact", changefreq: "monthly", priority: "0.5" },
     ...posts.map((post) => ({
-      path: `/blog/${post.slug}`,
+      path: `/pub/${post.slug}`,
       lastmod: post.updated || post.date,
       changefreq: "monthly",
       priority: "0.8",

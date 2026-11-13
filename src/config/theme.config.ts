@@ -15,7 +15,7 @@ export const SITE = {
 
 export const NAVIGATION = [
   { to: "/", label: "Home" },
-  { to: "/blog", label: "Writing" },
+  { to: "/pub", label: "Writing" },
   { to: "/about", label: "About" },
 ];
 

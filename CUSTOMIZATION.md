@@ -16,7 +16,7 @@ This file is the main configuration point, but not every string in the site is c
 
 `SITE.name` feeds the header, footer, page titles, metadata, and RSS channel. `SITE.description` is the default meta description and footer standfirst. `SITE.ogImg` is used by the homepage and About page; articles generate their social image from their thumbnail instead. `SITE.repositoryUrl` is currently informational and is not rendered by a component.
 
-`NAVIGATION` is a flat array. Add or reorder entries to change both navigation menus. Paths are matched by prefix, except `/`, which is matched exactly, so `/blog` remains active on article pages.
+`NAVIGATION` is a flat array. Add or reorder entries to change both navigation menus. Paths are matched by prefix, except `/`, which is matched exactly, so `/pub` remains active on article pages.
 
 ## Production URL
 
@@ -61,7 +61,7 @@ Add or remove taxonomy entries in the config and content together.
 
 ## Post Frontmatter
 
-Each post is a folder under [src/content/blog](./src/content/blog) containing `index.mdx` and its local assets. The folder name becomes both the slug and `/blog/<slug>`. [src/content.config.js](./src/content.config.js) validates the frontmatter.
+Each post is a folder under [src/content/blog](./src/content/blog) containing `index.mdx` and its local assets. The route slug is the first eight characters of the SHA-256 hash of `title`, producing `/pub/<title-hash>`; the folder name only organizes the content and assets. [src/content.config.js](./src/content.config.js) validates the frontmatter.
 
 Required fields:
 
@@ -108,7 +108,7 @@ The initial grid contains the pinned featured post and the two newest remaining 
 
 ## Archive and Search
 
-[src/pages/blog/index.astro](./src/pages/blog/index.astro) renders all published posts, then filters them in the browser. Search, category, and tag filters combine with AND.
+[src/pages/pub/index.astro](./src/pages/pub/index.astro) renders all published posts, then filters them in the browser. Search, category, and tag filters combine with AND.
 
 - State is stored in `?q=&cat=&tag=&page=` and written with `history.pushState`, so filtered views are shareable and Back/Forward works.
 - `pageSize` in the page script is 5. **Load more** reveals another batch and advances `page`.
@@ -118,13 +118,13 @@ The initial grid contains the pinned featured post and the two newest remaining 
 - Counts respond to the other active filters. Empty result options are dimmed rather than removed.
 - Unknown category or tag URL values are ignored.
 
-The header search is a native modal `<dialog>` in [src/components/Header.astro](./src/components/Header.astro). It submits a normal GET form to `/blog?q=...`; it does not maintain a separate search index.
+The header search is a native modal `<dialog>` in [src/components/Header.astro](./src/components/Header.astro). It submits a normal GET form to `/pub?q=...`; it does not maintain a separate search index.
 
 There is no generated search index or network request. The trade-off is that every published post card is shipped in the archive HTML. A much larger archive may need a generated index or server-side pagination.
 
 ## Article Pages
 
-[src/pages/blog/[slug].astro](./src/pages/blog/%5Bslug%5D.astro) assembles each article.
+[src/pages/pub/[slug].astro](./src/pages/pub/%5Bslug%5D.astro) assembles each article.
 
 - **Contents:** `##` and `###` headings become the desktop table of contents. [src/components/TableOfContents.astro](./src/components/TableOfContents.astro) tracks the visible section with IntersectionObserver and renders nothing when there are no eligible headings.
 - **Related posts:** up to three posts are selected by `relatedPosts()` in `src/lib/blog-data.js`: two points for a shared category and one for each shared tag.
@@ -140,9 +140,9 @@ Below it is a centered publication mark such as `26.i.3dd5fd06`:
 
 1. The two-digit year comes from `date`.
 2. The lowercase Roman numeral is the calendar quarter: `i`, `ii`, `iii`, or `iv`.
-3. The final eight characters are the beginning of the SHA-256 hash of that post's own `index.mdx`, calculated at build time. Images and other assets are not included.
+3. The final eight characters are the beginning of the SHA-256 hash of the post's `title`, calculated at build time. This is the same hash used in the article route.
 
-Replace `sign.svg` to change the signature. Edit the computation near the top of `[slug].astro` to change the publication mark.
+Replace `sign.svg` to change the signature. Edit `getPostSlug()` in `src/lib/blog-data.js` to change both the article route and the publication mark.
 
 ### Footnote navigation
 
@@ -252,19 +252,19 @@ Recent shows the four newest posts. Popular currently calls `popularPosts()`, wh
 
 ## Routes
 
-| Page      | Source                                                     | URL                  |
-| --------- | ---------------------------------------------------------- | -------------------- |
-| Home      | [src/pages/index.astro](./src/pages/index.astro)           | `/`                  |
-| Archive   | [src/pages/blog/index.astro](./src/pages/blog/index.astro) | `/blog`              |
-| Article   | `src/pages/blog/[slug].astro`                              | `/blog/<slug>`       |
-| Category  | `src/pages/categories/[slug].astro`                        | `/categories/<slug>` |
-| Tag       | `src/pages/tags/[slug].astro`                              | `/tags/<slug>`       |
-| About     | [src/pages/about.astro](./src/pages/about.astro)           | `/about`             |
-| Contact   | [src/pages/contact.astro](./src/pages/contact.astro)       | `/contact`           |
-| Not found | [src/pages/404.astro](./src/pages/404.astro)               | `/404`               |
-| Feed      | [src/pages/rss.xml.js](./src/pages/rss.xml.js)             | `/rss.xml`           |
-| Sitemap   | [src/pages/sitemap.xml.js](./src/pages/sitemap.xml.js)     | `/sitemap.xml`       |
-| Robots    | [src/pages/robots.txt.js](./src/pages/robots.txt.js)       | `/robots.txt`        |
+| Page      | Source                                                   | URL                  |
+| --------- | -------------------------------------------------------- | -------------------- |
+| Home      | [src/pages/index.astro](./src/pages/index.astro)         | `/`                  |
+| Archive   | [src/pages/pub/index.astro](./src/pages/pub/index.astro) | `/pub`               |
+| Article   | `src/pages/pub/[slug].astro`                             | `/pub/<slug>`        |
+| Category  | `src/pages/categories/[slug].astro`                      | `/categories/<slug>` |
+| Tag       | `src/pages/tags/[slug].astro`                            | `/tags/<slug>`       |
+| About     | [src/pages/about.astro](./src/pages/about.astro)         | `/about`             |
+| Contact   | [src/pages/contact.astro](./src/pages/contact.astro)     | `/contact`           |
+| Not found | [src/pages/404.astro](./src/pages/404.astro)             | `/404`               |
+| Feed      | [src/pages/rss.xml.js](./src/pages/rss.xml.js)           | `/rss.xml`           |
+| Sitemap   | [src/pages/sitemap.xml.js](./src/pages/sitemap.xml.js)   | `/sitemap.xml`       |
+| Robots    | [src/pages/robots.txt.js](./src/pages/robots.txt.js)     | `/robots.txt`        |
 
 Only the archive reveals posts in browser-side batches. Category and tag pages render their complete lists.
 
@@ -319,7 +319,7 @@ pnpm preview
 pnpm format
 ```
 
-Use `pnpm build` after content, schema, asset-pipeline, or Markdown-plugin changes. It validates frontmatter, regenerates static routes and optimized images, computes article source hashes, and prunes unused build assets.
+Use `pnpm build` after content, schema, asset-pipeline, or Markdown-plugin changes. It validates frontmatter, regenerates static routes and optimized images, computes article title hashes, and prunes unused build assets.
 
 ## Identity Change Checklist
 

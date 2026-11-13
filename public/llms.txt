@@ -13,7 +13,7 @@ The archive lists everything; the RSS feed carries full text.
 
 - [Home](https://sve.moe/): Latest issue and featured essays
 - [About](https://sve.moe/about): Who am I.(I'm Jysve, abbr."Sve". "sve" is also site's name)
-- [Archive](https://sve.moe/blog): All essays, searchable, filterable by category and tag
+- [Archive](https://sve.moe/pub): All essays, searchable, filterable by category and tag
 - [RSS feed](https://sve.moe/rss.xml): Full-text feed of every published piece
 
 ## Contributors

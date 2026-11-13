@@ -25,7 +25,7 @@ const tagOptions = tags
 <BaseLayout
   title={`Archive - ${SITE.name}`}
   description="Every essay, field note, and interview we've published. Search and filter by category or tag."
-  canonical="/blog"
+  canonical="/pub"
 >
   <div class="mx-auto max-w-4xl px-5 py-12" data-archive>
     <h1 class="mt-4 font-serif text-4xl font-semibold sm:text-5xl">The archive</h1>
@@ -65,7 +65,7 @@ const tagOptions = tags
         </summary>
         {/* Links, so aria-current marks the selection - aria-pressed is button-only. */}
         <nav class="filter-popover" aria-label="Filter by category">
-          <a href="/blog" class="facet" data-filter="cat" data-value="" aria-current="true">
+          <a href="/pub" class="facet" data-filter="cat" data-value="" aria-current="true">
             <span class="facet-label">All categories</span>
             <span class="facet-count" data-facet-count>{posts.length}</span>
           </a>
@@ -94,7 +94,7 @@ const tagOptions = tags
           <Icon name="chevron-down" class="h-3 w-3 transition-transform group-open:rotate-180" />
         </summary>
         <nav class="filter-popover" aria-label="Filter by tag">
-          <a href="/blog" class="facet" data-filter="tag" data-value="" aria-current="true">
+          <a href="/pub" class="facet" data-filter="tag" data-value="" aria-current="true">
             <span class="facet-label">Any tag</span>
             <span class="facet-count" data-facet-count>{posts.length}</span>
           </a>
@@ -192,7 +192,7 @@ const tagOptions = tags
       if (state.tag) params.set("tag", state.tag);
       if (state.page > 1) params.set("page", String(state.page));
       const query = params.toString();
-      history.pushState(state, "", query ? `/blog?${query}` : "/blog");
+      history.pushState(state, "", query ? `/pub?${query}` : "/pub");
     };
 
     /* Each option is counted against the *other* active filters, so a row says what

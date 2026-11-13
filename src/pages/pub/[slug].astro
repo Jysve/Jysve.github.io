@@ -1,7 +1,4 @@
 ---
-import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import { Image, getImage } from "astro:assets";
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -13,7 +10,6 @@ import Icon from "../../components/Icon.astro";
 import {
   SITE,
   profile,
-  getCategory,
   getTag,
   formatDate,
   relatedPosts,
@@ -22,12 +18,11 @@ import {
 
 export async function getStaticPaths() {
   const entries = await getCollection("blog", ({ data }) => !data.draft);
-  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  return entries.map((entry) => ({ params: { slug: normalizePost(entry).slug }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
 const post = normalizePost(entry);
-const category = getCategory(post.category);
 const { Content, headings } = await render(entry);
 const toc = headings
   .filter((heading) => heading.depth === 2 || heading.depth === 3)
@@ -37,7 +32,7 @@ const toc = headings
     text: heading.text,
   }));
 const related = await relatedPosts(post);
-const canonical = post.canonical ?? `/blog/${post.slug}`;
+const canonical = post.canonical ?? `/pub/${post.slug}`;
 const canonicalUrl = new URL(canonical, SITE.url).toString();
 const socialImage = post.thumbnail
   ? await getImage({
@@ -54,8 +49,7 @@ const publicationDate = new Date(post.date);
 const publicationQuarter = `${String(publicationDate.getUTCFullYear()).slice(-2)}.${
   ["i", "ii", "iii", "iv"][Math.floor(publicationDate.getUTCMonth() / 3)]
 }`;
-const source = await readFile(resolve("src/content/blog", entry.id, "index.mdx"));
-const sourceHash = createHash("sha256").update(source).digest("hex").slice(0, 8);
+const titleHash = post.slug;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
@@ -89,17 +83,10 @@ const jsonLd = {
 
   <article class="mx-auto max-w-6xl px-5 py-10">
     <header class="mx-auto mt-8 max-w-3xl text-center">
-      {
-        category && (
-          <a href={`/categories/${category.slug}`} class="text-xs font-medium uppercase tracking-[0.2em] text-primary hover:underline">
-            {category.name}
-          </a>
-        )
-      }
-      <h1 class="mt-4 font-serif text-4xl font-semibold leading-[1.1] sm:text-5xl">
+      <h1 class="mt-16 font-serif text-4xl font-semibold leading-[1.1] sm:text-5xl">
         {post.title}
       </h1>
-      <p class="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground">{post.excerpt}</p>
+      <p class="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground">{post.excerpt}</p>
       <div class="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
         <time datetime={post.date}>{formatDate(post.date)}</time>
         {post.updated && <><span>&middot;</span><span class="italic">Updated {formatDate(post.updated)}</span></>}
@@ -170,7 +157,7 @@ const jsonLd = {
             class="h-auto w-40 dark:invert"
           />
           <time datetime={post.date} class="mt-2 font-serif text-sm tracking-wide text-muted-foreground">
-            {publicationQuarter}.{sourceHash}
+            {publicationQuarter}.{titleHash}
           </time>
         </div>
 

@@ -7,7 +7,7 @@ const esc = (value) =>
 
 export async function GET() {
   const items = (await sortedPosts()).map((post) => {
-    const link = `${BASE_URL}/blog/${post.slug}`;
+    const link = `${BASE_URL}/pub/${post.slug}`;
     return [
       "    <item>",
       `      <title>${esc(post.title)}</title>`,

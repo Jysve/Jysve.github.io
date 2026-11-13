@@ -32,7 +32,7 @@ const jsonLd = {
         "@type": "SearchAction",
         "target": {
           "@type": "EntryPoint",
-          "urlTemplate": `${SITE.url}/blog?q={search_term_string}`
+          "urlTemplate": `${SITE.url}/pub?q={search_term_string}`
         },
         "query-input": "required name=search_term_string"
       }
@@ -95,13 +95,13 @@ const jsonLd = {
         </p>
         <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
           <a
-            href={`/blog/${featured.slug}`}
+            href={`/pub/${featured.slug}`}
             class="group italic inline-flex items-center gap-2 border-b border-white pb-1 text-sm font-medium text-white hover:border-white/70 hover:text-white/82"
           >
             View the latest update now
             <Icon name="arrow-right" class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </a>
-          <a href="/blog" class="italic text-sm text-white/76 hover:text-white">
+          <a href="/pub" class="italic text-sm text-white/76 hover:text-white">
             Browse the archive
           </a>
           <div
@@ -143,12 +143,12 @@ const jsonLd = {
 
     <div class="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
       {latest.map((post, index) => (
-        <PostCard post={post} hidden={index >= 3} pinned={post.slug === featured.slug} />
+        <PostCard post={post} hidden={index >= 3} pinned={post.slug === featured.slug} titleClass="text-xl" />
       ))}
     </div>
 
     <div class="mt-12 text-center">
-      <a href="/blog" class="inline-flex items-center gap-2 rounded-md border border-border px-5 py-2.5 text-sm font-medium hover:bg-muted">
+      <a href="/pub" class="inline-flex items-center gap-2 rounded-md border border-border px-5 py-2.5 text-sm font-medium hover:bg-muted">
         Browse the archive <Icon name="arrow-right" class="h-3.5 w-3.5" />
       </a>
     </div>

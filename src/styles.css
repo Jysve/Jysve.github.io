@@ -488,7 +488,7 @@
 @utility font-serif {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
-  font-size-adjust: 0.43;
+  font-size-adjust: 0.46;
   font-weight: 500;
 
   &.font-medium {
@@ -504,9 +504,16 @@
   width: 100%;
   max-width: 68ch;
   min-width: 0;
-  font-size: 1.0625rem;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.55;
   color: var(--color-foreground);
+
+  & h2,
+  & h3,
+  & blockquote,
+  & th {
+    font-size-adjust: 0.46;
+  }
 
   & h2 {
     font-family: var(--font-serif);

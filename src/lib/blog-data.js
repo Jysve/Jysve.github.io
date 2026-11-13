@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { getCollection } from "astro:content";
 export { SITE, profile, categories, tags } from "../config/theme.config.ts";
 import { categories, tags } from "../config/theme.config.ts";
@@ -17,8 +18,10 @@ const estimateReadingTime = (text = "") => {
 
 export const imageSrc = (image) => (typeof image === "string" ? image : image?.src);
 
+export const getPostSlug = (title) => createHash("sha256").update(title).digest("hex").slice(0, 8);
+
 export const normalizePost = (entry) => ({
-  slug: entry.id,
+  slug: getPostSlug(entry.data.title),
   ...entry.data,
   date: isoDate(entry.data.date),
   updated: isoDate(entry.data.updated),
